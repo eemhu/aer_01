@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,44 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.tls;
 
-package com.teragrep.aer_01.config;
+import com.azure.security.keyvault.jca.*;
+import com.teragrep.rlp_01.client.SSLContextSupplier;
+import org.apache.hc.core5.ssl.SSLContexts;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
 
-public final class MetricsConfig {
+public class AzureSSLContextSupplier implements SSLContextSupplier {
 
-    private final int prometheusPort;
+    @Override
+    public SSLContext get() {
+        KeyVaultJcaProvider jca = new KeyVaultJcaProvider();
+        Security.addProvider(jca);
+        KeyStore keyStore;
+        try {
+            keyStore = KeyVaultKeyStore.getKeyVaultKeyStoreBySystemProperty();
+        }
+        catch (CertificateException | KeyStoreException | NoSuchAlgorithmException | IOException e) {
+            throw new RuntimeException("Error retrieving KeyStore from KeyVault: ", e);
+        }
 
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+        SSLContext sslContext;
+        try {
+            sslContext = SSLContexts.custom().loadTrustMaterial(keyStore, (chain, authType) -> true).build();
+        }
+        catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+            throw new RuntimeException("Error creating SSLContext: ", e);
+        }
+
+        return sslContext;
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
-    }
-
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public boolean isStub() {
+        return false;
     }
 }

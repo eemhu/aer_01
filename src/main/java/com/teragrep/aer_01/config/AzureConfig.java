@@ -47,34 +47,41 @@ package com.teragrep.aer_01.config;
 
 import com.teragrep.aer_01.config.source.Sourceable;
 
-final public class AzureConfig {
-    public final Sourceable configSource;
-    public final String namespaceName;
-    public final String eventHubName;
-    public final String blobStorageEndpoint;
-    public final String blobStorageContainerName;
+public final class AzureConfig {
+    private final String namespaceName;
+    private final String eventHubName;
+    private final String blobStorageEndpoint;
+    private final String blobStorageContainerName;
 
-    public AzureConfig(Sourceable configSource) {
-        this.configSource = configSource;
-        this.namespaceName = getNamespaceName();
-        this.eventHubName = getEventHubName();
-        this.blobStorageEndpoint = getBlobStorageEndpoint();
-        this.blobStorageContainerName = getBlobStorageContainerName();
+    public AzureConfig(final Sourceable configSource) {
+        this(
+                configSource.source("azure.namespace", "<NAMESPACE NAME>.servicebus.windows.net"),
+                configSource.source("azure.eventhub", "<EVENT HUB NAME>"),
+                configSource.source("azure.blobstorage.endpoint", "https://<STORAGE ACCOUNT NAME>.blob.core.windows.net"),
+                configSource.source("azure.blobstorage.container", "<CONTAINER NAME>")
+        );
     }
 
-    private String getNamespaceName() {
-        return configSource.source("azure.namespace", "<NAMESPACE NAME>.servicebus.windows.net");
+    public AzureConfig(final String namespaceName, final String eventHubName, final String blobStorageEndpoint, final String blobStorageContainerName) {
+        this.namespaceName = namespaceName;
+        this.eventHubName = eventHubName;
+        this.blobStorageEndpoint = blobStorageEndpoint;
+        this.blobStorageContainerName = blobStorageContainerName;
     }
 
-    private String getEventHubName() {
-        return configSource.source("azure.eventhub", "<EVENT HUB NAME>");
+    public String namespaceName() {
+        return namespaceName;
     }
 
-    private String getBlobStorageEndpoint() {
-        return configSource.source("azure.blobstorage.endpoint", "https://<STORAGE ACCOUNT NAME>.blob.core.windows.net");
+    public String eventHubName() {
+        return eventHubName;
     }
 
-    private String getBlobStorageContainerName() {
-        return configSource.source("azure.blobstorage.container", "<CONTAINER NAME>");
+    public String blobStorageEndpoint() {
+        return blobStorageEndpoint;
+    }
+
+    public String blobStorageContainerName() {
+        return blobStorageContainerName;
     }
 }

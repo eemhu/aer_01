@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,34 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.metrics;
 
-package com.teragrep.aer_01.config;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.jmx.JmxReporter;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+public final class JmxReport implements Report {
 
-public final class MetricsConfig {
+    private final Report report;
+    private final JmxReporter jmxReporter;
 
-    private final int prometheusPort;
-
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    public JmxReport(final Report report, final MetricRegistry metricRegistry) {
+        this(report, JmxReporter.forRegistry(metricRegistry).build());
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public JmxReport(final Report report, final JmxReporter jmxReporter) {
+        this.report = report;
+        this.jmxReporter = jmxReporter;
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public void start() {
+        jmxReporter.start();
+        report.start();
+    }
+
+    @Override
+    public void close() {
+        report.close();
+        jmxReporter.close();
     }
 }

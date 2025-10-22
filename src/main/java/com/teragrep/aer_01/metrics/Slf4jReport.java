@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,40 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.metrics;
 
-package com.teragrep.aer_01.config;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Slf4jReporter;
+import org.slf4j.LoggerFactory;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+import java.util.concurrent.TimeUnit;
 
-public final class MetricsConfig {
+public final class Slf4jReport implements Report {
 
-    private final int prometheusPort;
+    private final Slf4jReporter slf4jReporter;
+    private final Report report;
 
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    public Slf4jReport(final Report report, final MetricRegistry metricRegistry) {
+        this(
+                report,
+                Slf4jReporter.forRegistry(metricRegistry).outputTo(LoggerFactory.getLogger(Slf4jReport.class)).convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build()
+        );
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public Slf4jReport(final Report report, final Slf4jReporter slf4jReporter) {
+        this.report = report;
+        this.slf4jReporter = slf4jReporter;
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public void start() {
+        slf4jReporter.start(1, TimeUnit.MINUTES);
+        report.start();
+    }
+
+    @Override
+    public void close() {
+        report.close();
+        slf4jReporter.close();
     }
 }

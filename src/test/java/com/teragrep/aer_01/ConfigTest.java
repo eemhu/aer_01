@@ -46,8 +46,8 @@
 package com.teragrep.aer_01;
 
 import com.teragrep.aer_01.config.AzureConfig;
-import com.teragrep.aer_01.config.RelpConfig;
 import com.teragrep.aer_01.config.SyslogConfig;
+import com.teragrep.aer_01.config.RelpConnectionConfig;
 import com.teragrep.aer_01.config.source.EnvironmentSource;
 import com.teragrep.aer_01.config.source.PropertySource;
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +57,7 @@ public class ConfigTest {
     @Test
     public void testConfigFromEnv() {
         AzureConfig azureConfig = new AzureConfig(new EnvironmentSource()); // AZURE_NAMESPACE comes from maven
-        Assertions.assertEquals("azure_namespace_from_env", azureConfig.namespaceName, "Expected to get config from environment variable");
+        Assertions.assertEquals("azure_namespace_from_env", azureConfig.namespaceName(), "Expected to get config from environment variable");
     }
 
     @Test
@@ -65,13 +65,13 @@ public class ConfigTest {
         String expected = "testing.hostname.example.com";
         System.setProperty("syslog.hostname", expected);
         SyslogConfig syslogConfig = new SyslogConfig(new PropertySource());
-        Assertions.assertEquals(expected, syslogConfig.hostname, "Expected to get config from property");
+        Assertions.assertEquals(expected, syslogConfig.hostName(), "Expected to get config from property");
         System.clearProperty("syslog.hostname");
     }
 
     @Test
     public void testConfigFallback() {
-        RelpConfig relpConfig = new RelpConfig(new EnvironmentSource());
-        Assertions.assertEquals(601, relpConfig.destinationPort, "Expected to get fallback value");
+        RelpConnectionConfig relpConfig = new RelpConnectionConfig(new EnvironmentSource());
+        Assertions.assertEquals(601, relpConfig.relpPort(), "Expected to get fallback value");
     }
 }

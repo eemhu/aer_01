@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,52 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-
-package com.teragrep.aer_01.config;
+package com.teragrep.aer_01.plugin;
 
 import com.teragrep.aer_01.config.source.Sourceable;
+import com.teragrep.akv_01.json.JsonFile;
+import com.teragrep.nlf_01.NLFPluginFactory;
+import jakarta.json.Json;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
-public final class MetricsConfig {
+import java.io.IOException;
+import java.util.Objects;
 
-    private final int prometheusPort;
+public final class PluginConfiguration {
 
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    private final Sourceable configSource;
+
+    public PluginConfiguration(final Sourceable configSource) {
+        this.configSource = configSource;
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public JsonStructure asJson() throws IOException {
+        final String configPath = configSource.source("plugins.config.path", "");
+
+        if (configPath.isEmpty()) {
+            return Json
+                    .createObjectBuilder()
+                    .add("defaultPluginFactoryClass", NLFPluginFactory.class.getName())
+                    .add("exceptionPluginFactoryClass", DefaultPluginFactory.class.getName())
+                    .add("resourceIds", JsonValue.EMPTY_JSON_ARRAY)
+                    .build();
+        }
+
+        return new JsonFile(configPath).asJsonStructure();
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PluginConfiguration that = (PluginConfiguration) o;
+        return Objects.equals(configSource, that.configSource);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(configSource);
     }
 }

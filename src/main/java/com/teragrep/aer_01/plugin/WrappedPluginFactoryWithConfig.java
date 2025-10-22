@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,29 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.plugin;
 
-package com.teragrep.aer_01.config;
+import com.teragrep.akv_01.plugin.PluginFactory;
+import com.teragrep.akv_01.plugin.PluginFactoryConfig;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+public final class WrappedPluginFactoryWithConfig {
 
-public final class MetricsConfig {
+    private final PluginFactory pluginFactory;
+    private final PluginFactoryConfig pluginFactoryConfig;
 
-    private final int prometheusPort;
-
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    public WrappedPluginFactoryWithConfig(
+            final PluginFactory pluginFactory,
+            final PluginFactoryConfig pluginFactoryConfig
+    ) {
+        this.pluginFactory = pluginFactory;
+        this.pluginFactoryConfig = pluginFactoryConfig;
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public PluginFactoryConfig pluginFactoryConfig() {
+        return pluginFactoryConfig;
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    public PluginFactory pluginFactory() {
+        return pluginFactory;
     }
 }

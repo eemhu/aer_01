@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.plugin;
 
-package com.teragrep.aer_01.config;
+import com.teragrep.akv_01.plugin.Plugin;
+import com.teragrep.akv_01.plugin.PluginFactory;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+import java.io.StringReader;
 
-public final class MetricsConfig {
+public final class DefaultPluginFactory implements PluginFactory {
 
-    private final int prometheusPort;
-
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
-    }
-
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
-    }
-
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public synchronized Plugin plugin(final String json) {
+        final JsonObject jsonObject;
+        try (
+                final StringReader stringReader = new StringReader(json); final JsonReader reader = Json.createReader(stringReader)
+        ) {
+            jsonObject = reader.readObject();
+        }
+        return new DefaultPlugin(
+                jsonObject.getString("realHostname"),
+                jsonObject.getString("syslogHostname"),
+                jsonObject.getString("syslogAppname")
+        );
     }
 }

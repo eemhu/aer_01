@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,44 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01.records;
 
-package com.teragrep.aer_01.config;
+import com.teragrep.akv_01.event.MultiRecordEvent;
+import com.teragrep.akv_01.event.ParsedEvent;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-public final class MetricsConfig {
+public final class EventRecords {
 
-    private final int prometheusPort;
+    private final ParsedEvent parsedEvent;
 
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    public EventRecords(final ParsedEvent parsedEvent) {
+        this.parsedEvent = parsedEvent;
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public List<ParsedEvent> records() {
+        final MultiRecordEvent mre = new MultiRecordEvent(parsedEvent);
+        if (mre.isValid()) {
+            return mre.records();
+        }
+        else {
+            return Collections.singletonList(parsedEvent);
+        }
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final EventRecords that = (EventRecords) o;
+        return Objects.equals(parsedEvent, that.parsedEvent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(parsedEvent);
     }
 }

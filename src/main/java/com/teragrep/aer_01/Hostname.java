@@ -1,6 +1,6 @@
 /*
- * Teragrep Azure Eventhub Reader
- * Copyright (C) 2023  Suomen Kanuuna Oy
+ * Teragrep syslog bridge function for Microsoft Azure EventHub
+ * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,24 +43,50 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+package com.teragrep.aer_01;
 
-package com.teragrep.aer_01.config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.teragrep.aer_01.config.source.Sourceable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
 
-public final class MetricsConfig {
+public final class Hostname {
 
-    private final int prometheusPort;
+    private final String defaultHostname;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Hostname.class);
 
-    public MetricsConfig(Sourceable configSource) {
-        this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
+    public Hostname(final String defaultHostname) {
+        this.defaultHostname = defaultHostname;
     }
 
-    public MetricsConfig(final int prometheusPort) {
-        this.prometheusPort = prometheusPort;
+    public String hostname() {
+        String rv;
+        try {
+            rv = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e) {
+            rv = defaultHostname;
+            LOGGER.warn("Could not determine hostname, defaulting to <{}>", defaultHostname, e);
+        }
+        return rv;
     }
 
-    public int prometheusPort() {
-        return prometheusPort;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Hostname hostname = (Hostname) o;
+        return Objects.equals(defaultHostname, hostname.defaultHostname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(defaultHostname);
     }
 }
