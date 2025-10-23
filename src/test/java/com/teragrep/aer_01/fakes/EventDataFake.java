@@ -52,9 +52,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
 public class EventDataFake extends EventData {
-    @Override
-    public byte[] getBody() {
-        return "foo".getBytes(StandardCharsets.UTF_8);
+    public EventDataFake() {
+        super("foo");
     }
 
     @Override

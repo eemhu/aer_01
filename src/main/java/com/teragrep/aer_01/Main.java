@@ -94,6 +94,7 @@ import java.util.logging.Logger;
 public final class Main {
 
     public static void main(String[] args) throws Exception {
+        final int MAX_BATCH_SIZE = 1000;
         final MetricRegistry metricRegistry = new MetricRegistry();
         final Sourceable configSource = getConfigSource();
         final int prometheusPort = new MetricsConfig(configSource).prometheusPort();
@@ -190,7 +191,7 @@ public final class Main {
                     .fullyQualifiedNamespace(azureConfig.namespaceName())
                     .eventHubName(azureConfig.eventHubName())
                     .consumerGroup(EventHubClientBuilder.DEFAULT_CONSUMER_GROUP_NAME)
-                    .processEvent(PARTITION_PROCESSOR)
+                    .processEventBatch(PARTITION_PROCESSOR, MAX_BATCH_SIZE)
                     .processError(ERROR_HANDLER)
                     .checkpointStore(new BlobCheckpointStore(blobContainerAsyncClient))
                     .credential(credential)

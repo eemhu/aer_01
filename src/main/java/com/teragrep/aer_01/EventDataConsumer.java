@@ -45,12 +45,12 @@
  */
 package com.teragrep.aer_01;
 
-import com.azure.messaging.eventhubs.models.EventContext;
+import com.azure.messaging.eventhubs.models.EventBatchContext;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.teragrep.aer_01.plugin.ParsedEventWithException;
 import com.teragrep.aer_01.plugin.WrappedPluginFactoryWithConfig;
-import com.teragrep.aer_01.records.EventContextAsParsedEvent;
+import com.teragrep.aer_01.records.ParsedEventListFromEventBatchFactory;
 import com.teragrep.aer_01.records.EventRecords;
 import com.teragrep.akv_01.event.ParsedEvent;
 import com.teragrep.akv_01.plugin.*;
@@ -61,7 +61,6 @@ import jakarta.json.JsonException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -70,7 +69,7 @@ import java.util.stream.Collectors;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-final class EventDataConsumer implements AutoCloseable, Consumer<EventContext> {
+final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchContext> {
 
     private final Logger logger;
     private final Output output;
@@ -166,19 +165,17 @@ final class EventDataConsumer implements AutoCloseable, Consumer<EventContext> {
 
         output.accept(syslogMessage.toRfc5424SyslogMessage().getBytes(StandardCharsets.UTF_8));
     }
+    
+    @Override
+    public void accept(final EventBatchContext eventBatchContext) {
+        accept(new ParsedEventListFromEventBatchFactory(eventBatchContext).parsedEvents());
+
+        // Update checkpoint after each event batch
+        eventBatchContext.updateCheckpoint();
+    }
 
     @Override
     public void close() throws Exception {
 
-    }
-
-    @Override
-    public void accept(final EventContext eventContext) {
-        accept(Collections.singletonList(new EventContextAsParsedEvent(eventContext).parsedEvent()));
-
-        // Checkpoint for every 10 events
-        if (eventContext.getEventData().getSequenceNumber() % 10 == 0) {
-            eventContext.updateCheckpoint();
-        }
     }
 }
