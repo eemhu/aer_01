@@ -43,18 +43,27 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.fakes;
+package com.teragrep.aer_01.records;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.akv_01.plugin.Plugin;
-import com.teragrep.rlo_14.SyslogMessage;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
-public final class ThrowingPlugin implements Plugin {
+public final class EnqueuedTimeFromInstantTest {
+    @Test
+    void testEnqueuedTimeFromInstant() {
+        final Instant fromInstant = Instant.ofEpochMilli(1000);
+        final EnqueuedTime et = new EnqueuedTimeFromInstant(fromInstant);
+        Assertions.assertEquals(ZonedDateTime.of(1970,1,1,0,0,1, 0, ZoneId.of("UTC")), et.zonedDateTime());
+    }
 
-    @Override
-    public List<SyslogMessage> syslogMessage(final ParsedEvent parsedEvent) {
-        throw new RuntimeException("ThrowingPlugin example message");
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(EnqueuedTimeFromInstant.class).verify();
     }
 }

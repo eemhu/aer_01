@@ -43,18 +43,38 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.fakes;
+package com.teragrep.aer_01.records;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.akv_01.plugin.Plugin;
-import com.teragrep.rlo_14.SyslogMessage;
+import com.azure.messaging.eventhubs.models.PartitionContext;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Map;
 
-public final class ThrowingPlugin implements Plugin {
+public final class EventPartitionContextFromPojoTest {
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(EventPartitionContextFromPojo.class).verify();
+    }
 
-    @Override
-    public List<SyslogMessage> syslogMessage(final ParsedEvent parsedEvent) {
-        throw new RuntimeException("ThrowingPlugin example message");
+    @Test
+    void testIdealCase() {
+        final PartitionContext partitionContext = new PartitionContext(
+                "test-namespace",
+                "test-eventhub",
+                "test-consumer-group",
+                "test-partition-id"
+        );
+        final EventPartitionContext eventPartitionContext = new EventPartitionContextFromPojo(
+                partitionContext
+        );
+        final Map<String, Object> ctxMap = eventPartitionContext.asMap();
+
+        Assertions.assertEquals("test-namespace", ctxMap.get("FullyQualifiedNamespace"));
+        Assertions.assertEquals("test-eventhub", ctxMap.get("EventHubName"));
+        Assertions.assertEquals("test-consumer-group", ctxMap.get("ConsumerGroup"));
+        Assertions.assertEquals("test-partition-id", ctxMap.get("PartitionId"));
     }
 }
