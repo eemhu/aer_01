@@ -47,6 +47,7 @@
 package com.teragrep.aer_01.fakes;
 
 import com.teragrep.aer_01.Output;
+import com.teragrep.rlp_01.RelpBatch;
 
 public final class OutputFake implements Output {
     @Override
@@ -55,7 +56,7 @@ public final class OutputFake implements Output {
     }
 
     @Override
-    public void accept(byte[] bytes) {
+    public void accept(RelpBatch batch) {
         // No functionality for a fake
     }
 }

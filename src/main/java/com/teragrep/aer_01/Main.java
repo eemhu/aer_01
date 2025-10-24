@@ -58,10 +58,7 @@ import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.jmx.JmxReporter;
-import com.teragrep.aer_01.config.AzureConfig;
-import com.teragrep.aer_01.config.MetricsConfig;
-import com.teragrep.aer_01.config.RelpConnectionConfig;
-import com.teragrep.aer_01.config.SyslogConfig;
+import com.teragrep.aer_01.config.*;
 import com.teragrep.aer_01.config.source.EnvironmentSource;
 import com.teragrep.aer_01.config.source.PropertySource;
 import com.teragrep.aer_01.config.source.Sourceable;
@@ -94,9 +91,9 @@ import java.util.logging.Logger;
 public final class Main {
 
     public static void main(String[] args) throws Exception {
-        final int MAX_BATCH_SIZE = 1000;
         final MetricRegistry metricRegistry = new MetricRegistry();
         final Sourceable configSource = getConfigSource();
+        final int MAX_BATCH_SIZE = new BatchConfig(configSource).maxBatchSize();
         final int prometheusPort = new MetricsConfig(configSource).prometheusPort();
         final Logger logger = Logger.getLogger(Main.class.getName());
         final String realHostname = new Hostname("localhost").hostname();
@@ -169,8 +166,7 @@ public final class Main {
 
         final DefaultOutput dOutput = new DefaultOutput(logger, relpConnectionPool);
 
-        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(logger, dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory
-        ,metricRegistry)) {
+        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(logger, dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry)) {
             AzureConfig azureConfig = new AzureConfig(configSource);
             final ErrorContextConsumer ERROR_HANDLER = new ErrorContextConsumer();
 
@@ -203,6 +199,10 @@ public final class Main {
             Thread.sleep(Long.MAX_VALUE);
 
             eventProcessorClient.stop();
+
+            jettyServer.stop();
+            slf4jReporter.stop();
+            jmxReporter.stop();
         }
     }
 

@@ -224,7 +224,5 @@ public final class EventDataConsumerTest {
         Assertions.assertEquals(1L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.connects").getCount());
         Assertions.assertEquals(0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.retriedConnects").getCount());
         Assertions.assertEquals(0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.resends").getCount());
-        Assertions.assertEquals(4750L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.bytes").getCount());
-
     }
 }

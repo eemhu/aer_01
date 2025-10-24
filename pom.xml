@@ -89,7 +89,7 @@
     <dependency>
       <groupId>com.teragrep</groupId>
       <artifactId>rlp_01</artifactId>
-      <version>4.1.0</version>
+      <version>5.0.0</version>
     </dependency>
       <!-- Azure KeyVault -->
       <!-- https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/keyvault/azure-security-keyvault-jca#client-side-ssl -->

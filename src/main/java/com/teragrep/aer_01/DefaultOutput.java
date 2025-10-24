@@ -47,6 +47,7 @@ package com.teragrep.aer_01;
 
 import com.codahale.metrics.MetricRegistry;
 import com.teragrep.aer_01.config.RelpConnectionConfig;
+import com.teragrep.rlp_01.RelpBatch;
 import com.teragrep.rlp_01.client.*;
 import com.teragrep.rlp_01.pool.Pool;
 import com.teragrep.rlp_01.pool.UnboundPool;
@@ -89,9 +90,9 @@ public final class DefaultOutput implements Output {
     private final Pool<IManagedRelpConnection> relpConnectionPool;
 
     @Override
-    public void accept(byte[] syslogMessage) {
+    public void accept(final RelpBatch batch) {
         IManagedRelpConnection connection = relpConnectionPool.get();
-        connection.ensureSent(syslogMessage);
+        connection.ensureSent(batch);
         relpConnectionPool.offer(connection);
     }
 
