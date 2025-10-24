@@ -43,26 +43,43 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.metrics;
+package com.teragrep.aer_01.fakes;
 
-import io.prometheus.client.Collector;
-import io.prometheus.client.CollectorRegistry;
+import com.teragrep.aer_01.config.source.Sourceable;
 
-public final class PrometheusReport implements Report {
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
-    private final Collector collector;
+public final class SourceableFake implements Sourceable {
 
-    public PrometheusReport(final Collector collector) {
-        this.collector = collector;
+    private final Map<String, String> map;
+
+    public SourceableFake() {
+        this(new HashMap<>());
+    }
+
+    public SourceableFake(final Map<String, String> map) {
+        this.map = map;
     }
 
     @Override
-    public void start() {
-        CollectorRegistry.defaultRegistry.register(collector);
-    }
-
-    @Override
-    public void close() {
-        CollectorRegistry.defaultRegistry.unregister(collector);
+    public String source(final String name, final String defaultValue) {
+        map.putIfAbsent("relp.tls.mode", "none");
+        map.putIfAbsent("plugins.config.path", "");
+        map.putIfAbsent("relp.connection.timeout", "2500");
+        map.putIfAbsent("relp.transaction.read.timeout", "1500");
+        map.putIfAbsent("relp.transaction.write.timeout", "1500");
+        map.putIfAbsent("relp.connection.retry.interval", "500");
+        map.putIfAbsent("relp.connection.port", "601");
+        map.putIfAbsent("relp.connection.address", "localhost");
+        map.putIfAbsent("relp.rebind.request.amount", "100000");
+        map.putIfAbsent("relp.rebind.enabled", "true");
+        map.putIfAbsent("relp.max.idle.duration", Duration.ofMillis(150000L).toString());
+        map.putIfAbsent("relp.max.idle.enabled", "false");
+        map.putIfAbsent("relp.connection.keepalive", "true");
+        map.putIfAbsent("syslog.appname", "aer-02");
+        map.putIfAbsent("syslog.hostname", "localhost.localdomain");
+        return map.getOrDefault(name, defaultValue);
     }
 }

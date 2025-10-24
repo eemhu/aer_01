@@ -43,40 +43,33 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.metrics;
+package com.teragrep.aer_01;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Slf4jReporter;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.TimeUnit;
+import java.net.InetAddress;
 
-public final class Slf4jReport implements Report {
+public final class HostnameTest {
 
-    private final Slf4jReporter slf4jReporter;
-    private final Report report;
-
-    public Slf4jReport(final Report report, final MetricRegistry metricRegistry) {
-        this(
-                report,
-                Slf4jReporter.forRegistry(metricRegistry).outputTo(LoggerFactory.getLogger(Slf4jReport.class)).convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build()
-        );
+    @Test
+    void testHostname() {
+        final Hostname hostname = new Hostname("default");
+        Assertions
+                .assertEquals(Assertions.assertDoesNotThrow(() -> InetAddress.getLocalHost().getHostName()), hostname.hostname());
     }
 
-    public Slf4jReport(final Report report, final Slf4jReporter slf4jReporter) {
-        this.report = report;
-        this.slf4jReporter = slf4jReporter;
+    @Test
+    void testEquals() {
+        final Hostname hostname1 = new Hostname("default");
+        final Hostname hostname2 = new Hostname("default");
+        Assertions.assertEquals(hostname1, hostname2);
     }
 
-    @Override
-    public void start() {
-        slf4jReporter.start(1, TimeUnit.MINUTES);
-        report.start();
-    }
-
-    @Override
-    public void close() {
-        report.close();
-        slf4jReporter.close();
+    @Test
+    void testNotEquals() {
+        final Hostname hostname1 = new Hostname("default");
+        final Hostname hostname2 = new Hostname("localhost");
+        Assertions.assertNotEquals(hostname1, hostname2);
     }
 }

@@ -56,6 +56,13 @@
           <version>9.0.1</version>
           <scope>test</scope>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
+      <dependency>
+          <groupId>nl.jqno.equalsverifier</groupId>
+          <artifactId>equalsverifier</artifactId>
+          <version>3.17.4</version>
+          <scope>test</scope>
+      </dependency>
       <!-- JSON libraries -->
       <dependency>
           <groupId>jakarta.json</groupId>

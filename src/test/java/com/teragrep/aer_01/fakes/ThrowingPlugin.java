@@ -43,11 +43,18 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.metrics;
+package com.teragrep.aer_01.fakes;
 
-public interface Report extends AutoCloseable {
+import com.teragrep.akv_01.event.ParsedEvent;
+import com.teragrep.akv_01.plugin.Plugin;
+import com.teragrep.rlo_14.SyslogMessage;
 
-    public abstract void start();
+import java.util.List;
 
-    public abstract void close();
+public final class ThrowingPlugin implements Plugin {
+
+    @Override
+    public List<SyslogMessage> syslogMessage(final ParsedEvent parsedEvent) {
+        throw new RuntimeException("ThrowingPlugin example message");
+    }
 }

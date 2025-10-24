@@ -43,34 +43,15 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01.metrics;
+package com.teragrep.aer_01.fakes;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.jmx.JmxReporter;
+import com.teragrep.akv_01.plugin.Plugin;
+import com.teragrep.akv_01.plugin.PluginFactory;
 
-public final class JmxReport implements Report {
-
-    private final Report report;
-    private final JmxReporter jmxReporter;
-
-    public JmxReport(final Report report, final MetricRegistry metricRegistry) {
-        this(report, JmxReporter.forRegistry(metricRegistry).build());
-    }
-
-    public JmxReport(final Report report, final JmxReporter jmxReporter) {
-        this.report = report;
-        this.jmxReporter = jmxReporter;
-    }
+public final class ThrowingPluginFactory implements PluginFactory {
 
     @Override
-    public void start() {
-        jmxReporter.start();
-        report.start();
-    }
-
-    @Override
-    public void close() {
-        report.close();
-        jmxReporter.close();
+    public Plugin plugin(String s) {
+        return new ThrowingPlugin();
     }
 }

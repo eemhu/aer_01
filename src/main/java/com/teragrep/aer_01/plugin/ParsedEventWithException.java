@@ -103,7 +103,7 @@ public final class ParsedEventWithException implements ParsedEvent {
         if (!parsedEvent.properties().isStub()) {
             props.putAll(parsedEvent.properties().asMap());
         }
-        props.put("aer-02-exception", exception);
+        props.put("aer-01-exception", exception);
         return new EventPropertiesImpl(props);
     }
 
