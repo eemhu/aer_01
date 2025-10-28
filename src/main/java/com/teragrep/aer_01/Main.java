@@ -78,24 +78,24 @@ import io.prometheus.client.exporter.MetricsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 // https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-java-get-started-send?tabs=passwordless%2Croles-azure-portal
 
 public final class Main {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
         final MetricRegistry metricRegistry = new MetricRegistry();
         final Sourceable configSource = getConfigSource();
         final int MAX_BATCH_SIZE = new BatchConfig(configSource).maxBatchSize();
         final int prometheusPort = new MetricsConfig(configSource).prometheusPort();
-        final Logger logger = Logger.getLogger(Main.class.getName());
         final String realHostname = new Hostname("localhost").hostname();
 
         RelpConnectionConfig relpConnectionConfig = new RelpConnectionConfig(configSource);
@@ -127,8 +127,7 @@ public final class Main {
                 defaultPluginFactoryClassName,
                 exceptionPluginFactoryClassName,
                 realHostname,
-                new SyslogConfig(configSource),
-                logger
+                new SyslogConfig(configSource)
         );
 
         Map<String, WrappedPluginFactoryWithConfig> pluginFactories = mappedPluginFactories.asUnmodifiableMap();
@@ -137,10 +136,9 @@ public final class Main {
 
         Pool<IManagedRelpConnection> relpConnectionPool;
         if (configSource.source("relp.tls.mode", "none").equals("keyVault")) {
-            logger.info("Using keyVault TLS mode");
+            LOGGER.info("Using keyVault TLS mode");
             relpConnectionPool = new UnboundPool<>(
                     new ManagedRelpConnectionWithMetricsFactory(
-                            logger,
                             relpConnectionConfig.asRelpConfig(),
                             "defaultOutput",
                             metricRegistry,
@@ -151,10 +149,9 @@ public final class Main {
             );
         }
         else {
-            logger.info("Using plain mode");
+            LOGGER.info("Using plain mode");
             relpConnectionPool = new UnboundPool<>(
                     new ManagedRelpConnectionWithMetricsFactory(
-                            logger,
                             relpConnectionConfig.asRelpConfig(),
                             "defaultOutput",
                             metricRegistry,
@@ -164,9 +161,9 @@ public final class Main {
             );
         }
 
-        final DefaultOutput dOutput = new DefaultOutput(logger, relpConnectionPool);
+        final DefaultOutput dOutput = new DefaultOutput(relpConnectionPool);
 
-        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(logger, dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry)) {
+        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry)) {
             AzureConfig azureConfig = new AzureConfig(configSource);
             final ErrorContextConsumer ERROR_HANDLER = new ErrorContextConsumer();
 

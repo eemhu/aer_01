@@ -48,37 +48,36 @@ package com.teragrep.aer_01.plugin;
 import com.teragrep.aer_01.config.SyslogConfig;
 import com.teragrep.akv_01.plugin.*;
 import jakarta.json.Json;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public final class MappedPluginFactories {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MappedPluginFactories.class);
     private final Map<String, PluginFactoryConfig> pluginFactoryConfigs;
     private final String defaultPluginFactoryClassName;
     private final String exceptionPluginFactoryClassName;
     private final String realHostname;
     private final SyslogConfig syslogConfig;
-    private final Logger logger;
 
     public MappedPluginFactories(
             final Map<String, PluginFactoryConfig> pluginFactoryConfigs,
             final String defaultPluginFactoryClassName,
             final String exceptionPluginFactoryClassName,
             final String realHostname,
-            final SyslogConfig syslogConfig,
-            final Logger logger
+            final SyslogConfig syslogConfig
     ) {
         this.pluginFactoryConfigs = pluginFactoryConfigs;
         this.defaultPluginFactoryClassName = defaultPluginFactoryClassName;
         this.exceptionPluginFactoryClassName = exceptionPluginFactoryClassName;
         this.realHostname = realHostname;
         this.syslogConfig = syslogConfig;
-        this.logger = logger;
     }
 
     public Map<String, WrappedPluginFactoryWithConfig> asUnmodifiableMap() {
@@ -111,8 +110,8 @@ public final class MappedPluginFactories {
                 ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException
                 | IllegalAccessException e
         ) {
-            logger.throwing(MappedPluginFactories.class.getName(), "newWrappedPluginFactoryWithConfig", e);
-            throw new IllegalStateException(e);
+            LOGGER.error("Error initializing plugin factory: <[{}]>", cfg.pluginFactoryClassName(), e);
+            throw new IllegalStateException("Error initializing plugin factory", e);
         }
     }
 

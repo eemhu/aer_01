@@ -57,7 +57,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public final class MappedPluginFactoriesTest {
 
@@ -71,8 +70,7 @@ public final class MappedPluginFactoriesTest {
                 NLFPluginFactory.class.getName(),
                 DefaultPluginFactory.class.getName(),
                 "host",
-                new SyslogConfig("app", "host"),
-                Logger.getAnonymousLogger()
+                new SyslogConfig("app", "host")
         );
 
         Map<String, WrappedPluginFactoryWithConfig> plugins = mappedPluginFactories.asUnmodifiableMap();
@@ -101,8 +99,7 @@ public final class MappedPluginFactoriesTest {
                 NLFPluginFactory.class.getName(),
                 DefaultPluginFactory.class.getName(),
                 "host",
-                new SyslogConfig("app", "host"),
-                Logger.getAnonymousLogger()
+                new SyslogConfig("app", "host")
         );
 
         Map<String, WrappedPluginFactoryWithConfig> plugins = mappedPluginFactories.asUnmodifiableMap();
@@ -129,8 +126,7 @@ public final class MappedPluginFactoriesTest {
                 "invalid",
                 "invalid2",
                 "host",
-                new SyslogConfig("app", "host"),
-                Logger.getAnonymousLogger()
+                new SyslogConfig("app", "host")
         );
 
         Assertions.assertThrows(IllegalStateException.class, mappedPluginFactories::asUnmodifiableMap);
@@ -147,8 +143,7 @@ public final class MappedPluginFactoriesTest {
                 EventData.class.getName(),
                 EventData.class.getName(),
                 "host",
-                new SyslogConfig("app", "host"),
-                Logger.getAnonymousLogger()
+                new SyslogConfig("app", "host")
         );
 
         Assertions.assertThrows(ClassCastException.class, mappedPluginFactories::asUnmodifiableMap);
@@ -160,8 +155,6 @@ public final class MappedPluginFactoriesTest {
     void testEqualsContract() {
         EqualsVerifier
                 .forClass(MappedPluginFactories.class)
-                .withPrefabValues(Logger.class, Logger.getAnonymousLogger(), Logger.getAnonymousLogger())
-                .withIgnoredFields("logger")
                 .verify();
     }
 }

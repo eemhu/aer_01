@@ -50,7 +50,8 @@ import com.teragrep.rlp_01.RelpConnection;
 import com.teragrep.rlp_01.client.*;
 
 import java.util.function.Supplier;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManagedRelpConnection> {
 
@@ -59,46 +60,41 @@ public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManage
     private final SSLContextSupplier sslContextSupplier;
     private final String name;
     private final MetricRegistry metricRegistry;
-    private final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ManagedRelpConnectionWithMetricsFactory.class);
 
     public ManagedRelpConnectionWithMetricsFactory(
-            Logger logger,
             String name,
             MetricRegistry metricRegistry,
             RelpConfig relpConfig
     ) {
-        this(logger, relpConfig, name, metricRegistry, new SocketConfigDefault());
+        this(relpConfig, name, metricRegistry, new SocketConfigDefault());
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            Logger logger,
             RelpConfig relpConfig,
             String name,
             MetricRegistry metricRegistry,
             SocketConfig socketConfig
     ) {
-        this(logger, relpConfig, name, metricRegistry, socketConfig, new SSLContextSupplierStub());
+        this(relpConfig, name, metricRegistry, socketConfig, new SSLContextSupplierStub());
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            Logger logger,
             RelpConfig relpConfig,
             String name,
             MetricRegistry metricRegistry,
             SSLContextSupplier sslContextSupplier
     ) {
-        this(logger, relpConfig, name, metricRegistry, new SocketConfigDefault(), sslContextSupplier);
+        this(relpConfig, name, metricRegistry, new SocketConfigDefault(), sslContextSupplier);
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            Logger logger,
             RelpConfig relpConfig,
             String name,
             MetricRegistry metricRegistry,
             SocketConfig socketConfig,
             SSLContextSupplier sslContextSupplier
     ) {
-        this.logger = logger;
         this.relpConfig = relpConfig;
         this.name = name;
         this.metricRegistry = metricRegistry;
@@ -126,7 +122,6 @@ public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManage
         relpConnection.setKeepAlive(socketConfig.keepAlive());
 
         IManagedRelpConnection managedRelpConnection = new ManagedRelpConnectionWithMetrics(
-                logger,
                 relpConnection,
                 name,
                 metricRegistry

@@ -76,7 +76,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public final class EventDataConsumerTest {
@@ -131,10 +130,8 @@ public final class EventDataConsumerTest {
                 false, true
         );
         DefaultOutput output = new DefaultOutput(
-                Logger.getAnonymousLogger(),
                 new UnboundPool<>(
                         new ManagedRelpConnectionWithMetricsFactory(
-                                Logger.getAnonymousLogger(),
                                 "defaultOutput",
                                 metricRegistry,
                                 relpConfig.asRelpConfig()
@@ -143,7 +140,6 @@ public final class EventDataConsumerTest {
                 )
         );
         EventDataConsumer edc = new EventDataConsumer(
-                Logger.getAnonymousLogger(),
                 output,
                 new HashMap<>(),
                 Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
@@ -198,10 +194,8 @@ public final class EventDataConsumerTest {
                 false, true
         );
         DefaultOutput output = new DefaultOutput(
-                Logger.getAnonymousLogger(),
                 new UnboundPool<>(
                         new ManagedRelpConnectionWithMetricsFactory(
-                                Logger.getAnonymousLogger(),
                                 "defaultOutput",
                                 metricRegistry,
                                 relpConfig.asRelpConfig()
@@ -210,7 +204,6 @@ public final class EventDataConsumerTest {
                 )
         );
         EventDataConsumer edc = new EventDataConsumer(
-                Logger.getAnonymousLogger(),
                 output,
                 new HashMap<>(),
                 Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),

@@ -51,8 +51,8 @@ import com.teragrep.rlp_01.RelpBatch;
 import com.teragrep.rlp_01.client.*;
 import com.teragrep.rlp_01.pool.Pool;
 import com.teragrep.rlp_01.pool.UnboundPool;
-
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * Implementation of a shareable output. Required to be thread-safe.
@@ -60,17 +60,14 @@ import java.util.logging.Logger;
 public final class DefaultOutput implements Output {
 
     DefaultOutput(
-            Logger logger,
             String name,
             RelpConnectionConfig relpConnectionConfig,
             MetricRegistry metricRegistry,
             SSLContextSupplier sslContextSupplier
     ) {
         this(
-                logger,
                 new UnboundPool<>(
                         new ManagedRelpConnectionWithMetricsFactory(
-                                logger,
                                 relpConnectionConfig.asRelpConfig(),
                                 name,
                                 metricRegistry,
@@ -82,11 +79,12 @@ public final class DefaultOutput implements Output {
         );
     }
 
-    DefaultOutput(Logger logger, Pool<IManagedRelpConnection> relpConnectionPool) {
+    DefaultOutput(Pool<IManagedRelpConnection> relpConnectionPool) {
         this.relpConnectionPool = relpConnectionPool;
-        logger.info("DefaultOutput constructor done");
+        LOGGER.info("DefaultOutput constructor done");
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOutput.class);
     private final Pool<IManagedRelpConnection> relpConnectionPool;
 
     @Override

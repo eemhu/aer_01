@@ -49,16 +49,17 @@ import com.codahale.metrics.*;
 import com.teragrep.rlp_01.RelpBatch;
 import com.teragrep.rlp_01.client.IManagedRelpConnection;
 import com.teragrep.rlp_01.client.IRelpConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
 public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection {
 
-    private final Logger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ManagedRelpConnectionWithMetrics.class);
     private final IRelpConnection relpConnection;
     private boolean hasConnected;
 
@@ -71,13 +72,11 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
     private final Timer connectLatency;
 
     public ManagedRelpConnectionWithMetrics(
-            Logger logger,
             IRelpConnection relpConnection,
             String name,
             MetricRegistry metricRegistry
     ) {
         this(
-                logger,
                 relpConnection,
                 name,
                 metricRegistry,
@@ -87,14 +86,12 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
     }
 
     public ManagedRelpConnectionWithMetrics(
-            Logger logger,
             IRelpConnection relpConnection,
             String name,
             MetricRegistry metricRegistry,
             Reservoir sendReservoir,
             Reservoir connectReservoir
     ) {
-        this.logger = logger;
         this.relpConnection = relpConnection;
 
         this.records = metricRegistry.counter(name(DefaultOutput.class, "<[" + name + "]>", "records"));
@@ -135,10 +132,10 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
                 connects.inc();
             }
             catch (IOException | TimeoutException e) {
-                logger
-                        .warning(
-                                "Failed to connect to relp server <[" + relpConnection.relpConfig().relpTarget + "]>:<["
-                                        + relpConnection.relpConfig().relpPort + "]>: <" + e.getMessage() + ">"
+                LOGGER
+                        .warn(
+                                "Failed to connect to relp server <[{}]>:<[{}]>: <{}>", relpConnection.relpConfig().relpTarget,
+                                        + relpConnection.relpConfig().relpPort, e.getMessage()
                         );
 
                 try {
@@ -146,7 +143,7 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
                     retriedConnects.inc();
                 }
                 catch (InterruptedException exception) {
-                    logger.warning("Reconnection timer interrupted, reconnecting now");
+                    LOGGER.warn("Reconnection timer interrupted, reconnecting now");
                 }
             }
         }
@@ -185,7 +182,7 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
                     records.inc(numRecords);
                 }
                 catch (IllegalStateException | IOException | TimeoutException e) {
-                    logger.warning("Exception <" + e.getMessage() + "> while sending relpBatch. Will retry");
+                    LOGGER.warn("Exception <{}> while sending relpBatch. Will retry", e.getMessage());
                 }
                 if (!batch.verifyTransactionAll()) {
                     batch.retryAllFailed();
@@ -211,7 +208,7 @@ public class ManagedRelpConnectionWithMetrics implements IManagedRelpConnection 
             this.relpConnection.disconnect();
         }
         catch (IllegalStateException | IOException | TimeoutException e) {
-            logger.warning("Forcefully closing connection due to exception <" + e.getMessage() + ">");
+            LOGGER.warn("Forcefully closing connection due to exception <{}>", e.getMessage());
         }
         finally {
             tearDown();
