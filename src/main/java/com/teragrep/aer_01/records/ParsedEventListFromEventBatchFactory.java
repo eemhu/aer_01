@@ -85,17 +85,19 @@ public final class ParsedEventListFromEventBatchFactory {
         final List<EventData> eventDatas = eventBatchContext.getEvents();
 
         for (final EventData eventData : eventDatas) {
-            final String payload = eventData.getBodyAsString();
-
-            if (payload == null) {
-                continue;
-            }
-
+            final String payload;
             final EventPartitionContext partitionCtx;
             final EventProperties props;
             final EventSystemProperties systemProps;
             final EnqueuedTime enqueuedTime;
             final EventOffset offset;
+
+            if (eventData.getBodyAsString() != null) {
+                payload = eventData.getBodyAsString();
+            }
+            else {
+                payload = "";
+            }
 
             if (partitionContext != null) {
                 partitionCtx = new EventPartitionContextFromPojo(partitionContext);
