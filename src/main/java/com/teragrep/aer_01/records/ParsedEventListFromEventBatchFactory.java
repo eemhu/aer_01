@@ -91,30 +91,45 @@ public final class ParsedEventListFromEventBatchFactory {
                 continue;
             }
 
-            EventPartitionContext partitionCtx = eventPartitionContextStub;
-            EventProperties props = eventPropertiesStub;
-            EventSystemProperties systemProps = eventSystemPropertiesStub;
-            EnqueuedTime enqueuedTime = enqueuedTimeStub;
-            EventOffset offset = eventOffsetStub;
+            final EventPartitionContext partitionCtx;
+            final EventProperties props;
+            final EventSystemProperties systemProps;
+            final EnqueuedTime enqueuedTime;
+            final EventOffset offset;
 
             if (partitionContext != null) {
                 partitionCtx = new EventPartitionContextFromPojo(partitionContext);
+            }
+            else {
+                partitionCtx = eventPartitionContextStub;
             }
 
             if (eventData.getProperties() != null) {
                 props = new EventPropertiesImpl(eventData.getProperties());
             }
+            else {
+                props = eventPropertiesStub;
+            }
 
             if (eventData.getSystemProperties() != null) {
                 systemProps = new EventSystemPropertiesImpl(eventData.getSystemProperties());
+            }
+            else {
+                systemProps = eventSystemPropertiesStub;
             }
 
             if (eventData.getEnqueuedTime() != null) {
                 enqueuedTime = new EnqueuedTimeFromInstant(eventData.getEnqueuedTime());
             }
+            else {
+                enqueuedTime = enqueuedTimeStub;
+            }
 
             if (eventData.getOffset() != null) {
                 offset = new EventOffsetImpl(eventData.getOffset().toString());
+            }
+            else {
+                offset = eventOffsetStub;
             }
 
 
