@@ -79,7 +79,7 @@ public final class DefaultPlugin implements Plugin {
 
     @Override
     public List<SyslogMessage> syslogMessage(final ParsedEvent parsedEvent) {
-        ZonedDateTime enqueuedTime;
+        final ZonedDateTime enqueuedTime;
         if (!parsedEvent.enqueuedTimeUtc().isStub()) {
             enqueuedTime = parsedEvent.enqueuedTimeUtc().zonedDateTime();
         }

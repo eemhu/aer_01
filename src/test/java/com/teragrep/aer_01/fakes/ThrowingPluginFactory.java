@@ -51,7 +51,7 @@ import com.teragrep.akv_01.plugin.PluginFactory;
 public final class ThrowingPluginFactory implements PluginFactory {
 
     @Override
-    public Plugin plugin(String s) {
+    public Plugin plugin(final String s) {
         return new ThrowingPlugin();
     }
 }

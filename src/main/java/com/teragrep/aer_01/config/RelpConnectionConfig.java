@@ -79,7 +79,6 @@ public final class RelpConnectionConfig {
                 Duration.parse(configSource.source("relp.max.idle.duration", Duration.ofMillis(150000L).toString())),
                 Boolean.parseBoolean(configSource.source("relp.max.idle.enabled", "false")),
                 Boolean.parseBoolean(configSource.source("relp.connection.keepalive", "true"))
-
         );
     }
 

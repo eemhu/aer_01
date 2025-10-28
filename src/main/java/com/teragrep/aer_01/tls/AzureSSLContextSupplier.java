@@ -54,25 +54,25 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
 
-public class AzureSSLContextSupplier implements SSLContextSupplier {
+public final class AzureSSLContextSupplier implements SSLContextSupplier {
 
     @Override
     public SSLContext get() {
-        KeyVaultJcaProvider jca = new KeyVaultJcaProvider();
+        final KeyVaultJcaProvider jca = new KeyVaultJcaProvider();
         Security.addProvider(jca);
-        KeyStore keyStore;
+        final KeyStore keyStore;
         try {
             keyStore = KeyVaultKeyStore.getKeyVaultKeyStoreBySystemProperty();
         }
-        catch (CertificateException | KeyStoreException | NoSuchAlgorithmException | IOException e) {
+        catch (final CertificateException | KeyStoreException | NoSuchAlgorithmException | IOException e) {
             throw new RuntimeException("Error retrieving KeyStore from KeyVault: ", e);
         }
 
-        SSLContext sslContext;
+        final SSLContext sslContext;
         try {
             sslContext = SSLContexts.custom().loadTrustMaterial(keyStore, (chain, authType) -> true).build();
         }
-        catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+        catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             throw new RuntimeException("Error creating SSLContext: ", e);
         }
 

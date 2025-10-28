@@ -107,7 +107,7 @@ public final class MappedPluginFactories {
             );
         }
         catch (
-                ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException
+                final ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException
                 | IllegalAccessException e
         ) {
             LOGGER.error("Error initializing plugin factory: <[{}]>", cfg.pluginFactoryClassName(), e);

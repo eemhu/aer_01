@@ -69,7 +69,7 @@ import java.util.stream.Collectors;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchContext> {
+public final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchContext> {
 
     private final Output output;
     private final Map<String, WrappedPluginFactoryWithConfig> pluginFactories;
@@ -178,7 +178,7 @@ final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchConte
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         output.close();
     }
 }

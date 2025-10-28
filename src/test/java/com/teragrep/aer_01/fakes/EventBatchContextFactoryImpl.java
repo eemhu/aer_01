@@ -64,7 +64,7 @@ public final class EventBatchContextFactoryImpl implements EventBatchContextFact
 
     @Override
     public EventBatchContext eventBatchContext() {
-        List<EventData> eventDataList = new ArrayList<>();
+        final List<EventData> eventDataList = new ArrayList<>();
         final PartitionContext partitionContext = new PartitionContext("namespace", "eventHubName",
                 "consumerGroup", "0");
         final LastEnqueuedEventProperties lastEnqueuedEventProperties = new LastEnqueuedEventProperties(1L, 100L,

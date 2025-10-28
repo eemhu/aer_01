@@ -45,6 +45,7 @@
  */
 package com.teragrep.aer_01;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -60,16 +61,7 @@ public final class HostnameTest {
     }
 
     @Test
-    void testEquals() {
-        final Hostname hostname1 = new Hostname("default");
-        final Hostname hostname2 = new Hostname("default");
-        Assertions.assertEquals(hostname1, hostname2);
-    }
-
-    @Test
-    void testNotEquals() {
-        final Hostname hostname1 = new Hostname("default");
-        final Hostname hostname2 = new Hostname("localhost");
-        Assertions.assertNotEquals(hostname1, hostname2);
+    void testEqualsContract() {
+        EqualsVerifier.forClass(Hostname.class).verify();
     }
 }

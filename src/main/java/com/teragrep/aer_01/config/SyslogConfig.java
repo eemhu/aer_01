@@ -54,7 +54,7 @@ public final class SyslogConfig {
 
     public SyslogConfig(final Sourceable configSource) {
         this(
-                configSource.source("syslog.appname", "aer-02"),
+                configSource.source("syslog.appname", "aer-01"),
                 configSource.source("syslog.hostname", "localhost.localdomain")
         );
     }

@@ -66,7 +66,7 @@ public final class Hostname {
         try {
             rv = InetAddress.getLocalHost().getHostName();
         }
-        catch (UnknownHostException e) {
+        catch (final UnknownHostException e) {
             rv = defaultHostname;
             LOGGER.warn("Could not determine hostname, defaulting to <{}>", defaultHostname, e);
         }
@@ -74,14 +74,14 @@ public final class Hostname {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Hostname hostname = (Hostname) o;
+        final Hostname hostname = (Hostname) o;
         return Objects.equals(defaultHostname, hostname.defaultHostname);
     }
 

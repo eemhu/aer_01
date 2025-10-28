@@ -85,7 +85,7 @@ public final class DefaultPluginTest {
                 );
 
         Assertions.assertEquals("event", msg.get(0).getMsg());
-        // aer_02@48577; aer_02_event@48577; aer_02_partition@48577; event_id@48577
+        // aer_01@48577; aer_01_event@48577; aer_01_partition@48577; event_id@48577
         Assertions.assertEquals(4, msg.get(0).getSDElements().size());
         Assertions.assertEquals("syslogHostname", msg.get(0).getHostname());
         Assertions.assertEquals("syslogAppname", msg.get(0).getAppName());

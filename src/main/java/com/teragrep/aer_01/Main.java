@@ -91,23 +91,23 @@ import java.util.concurrent.TimeUnit;
 public final class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         final MetricRegistry metricRegistry = new MetricRegistry();
         final Sourceable configSource = getConfigSource();
         final int MAX_BATCH_SIZE = new BatchConfig(configSource).maxBatchSize();
         final int prometheusPort = new MetricsConfig(configSource).prometheusPort();
         final String realHostname = new Hostname("localhost").hostname();
 
-        RelpConnectionConfig relpConnectionConfig = new RelpConnectionConfig(configSource);
+        final RelpConnectionConfig relpConnectionConfig = new RelpConnectionConfig(configSource);
 
-        JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
-        Slf4jReporter slf4jReporter = Slf4jReporter
+        final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
+        final Slf4jReporter slf4jReporter = Slf4jReporter
                 .forRegistry(metricRegistry)
                 .outputTo(LoggerFactory.getLogger(EventDataConsumer.class))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
-        Server jettyServer = new Server(prometheusPort);
+        final Server jettyServer = new Server(prometheusPort);
 
         startMetrics(jmxReporter, slf4jReporter, metricRegistry, jettyServer);
 
@@ -116,7 +116,7 @@ public final class Main {
             pluginMap = new PluginMap(new PluginConfiguration(configSource).asJson());
         }
         catch (final IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("Initializing PluginMap failed", e);
         }
 
         final Map<String, PluginFactoryConfig> pluginFactoryConfigs = pluginMap.asUnmodifiableMap();
@@ -130,11 +130,11 @@ public final class Main {
                 new SyslogConfig(configSource)
         );
 
-        Map<String, WrappedPluginFactoryWithConfig> pluginFactories = mappedPluginFactories.asUnmodifiableMap();
-        WrappedPluginFactoryWithConfig defaultPluginFactory = mappedPluginFactories.defaultPluginFactoryWithConfig();
-        WrappedPluginFactoryWithConfig exceptionPluginFactory = mappedPluginFactories.exceptionPluginFactoryWithConfig();
+        final Map<String, WrappedPluginFactoryWithConfig> pluginFactories = mappedPluginFactories.asUnmodifiableMap();
+        final WrappedPluginFactoryWithConfig defaultPluginFactory = mappedPluginFactories.defaultPluginFactoryWithConfig();
+        final WrappedPluginFactoryWithConfig exceptionPluginFactory = mappedPluginFactories.exceptionPluginFactoryWithConfig();
 
-        Pool<IManagedRelpConnection> relpConnectionPool;
+        final Pool<IManagedRelpConnection> relpConnectionPool;
         if (configSource.source("relp.tls.mode", "none").equals("keyVault")) {
             LOGGER.info("Using keyVault TLS mode");
             relpConnectionPool = new UnboundPool<>(
@@ -164,23 +164,23 @@ public final class Main {
         final DefaultOutput dOutput = new DefaultOutput(relpConnectionPool);
 
         try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry)) {
-            AzureConfig azureConfig = new AzureConfig(configSource);
+            final AzureConfig azureConfig = new AzureConfig(configSource);
             final ErrorContextConsumer ERROR_HANDLER = new ErrorContextConsumer();
 
             // create a token using the default Azure credential
-            DefaultAzureCredential credential = new DefaultAzureCredentialBuilder()
+            final DefaultAzureCredential credential = new DefaultAzureCredentialBuilder()
                     .authorityHost(AzureAuthorityHosts.AZURE_PUBLIC_CLOUD)
                     .build();
 
             // Create a blob container client that you use later to build an event processor client to receive and process events
-            BlobContainerAsyncClient blobContainerAsyncClient = new BlobContainerClientBuilder()
+            final BlobContainerAsyncClient blobContainerAsyncClient = new BlobContainerClientBuilder()
                     .credential(credential)
                     .endpoint(azureConfig.blobStorageEndpoint())
                     .containerName(azureConfig.blobStorageContainerName())
                     .buildAsyncClient();
 
             // Create an event processor client to receive and process events and errors.
-            EventProcessorClient eventProcessorClient = new EventProcessorClientBuilder()
+            final EventProcessorClient eventProcessorClient = new EventProcessorClientBuilder()
                     .fullyQualifiedNamespace(azureConfig.namespaceName())
                     .eventHubName(azureConfig.eventHubName())
                     .consumerGroup(EventHubClientBuilder.DEFAULT_CONSUMER_GROUP_NAME)
@@ -210,27 +210,28 @@ public final class Main {
         // prometheus-exporter
         CollectorRegistry.defaultRegistry.register(new DropwizardExports(metricRegistry));
 
-        ServletContextHandler context = new ServletContextHandler();
+        final ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");
         jettyServer.setHandler(context);
 
-        MetricsServlet metricsServlet = new MetricsServlet();
-        ServletHolder servletHolder = new ServletHolder(metricsServlet);
+        final MetricsServlet metricsServlet = new MetricsServlet();
+        final ServletHolder servletHolder = new ServletHolder(metricsServlet);
         context.addServlet(servletHolder, "/metrics");
 
         // Start the webserver.
         try {
             jettyServer.start();
         }
-        catch (Exception e) {
-            throw new RuntimeException(e);
+        catch (final Exception e) {
+            LOGGER.error("Starting Jetty server failed", e);
+            throw new RuntimeException("Starting Jetty server failed", e);
         }
     }
 
     private static Sourceable getConfigSource() {
-        String type = System.getProperty("config.source", "properties");
+        final String type = System.getProperty("config.source", "properties");
 
-        Sourceable rv;
+        final Sourceable rv;
         if ("properties".equals(type)) {
             rv = new PropertySource();
         }

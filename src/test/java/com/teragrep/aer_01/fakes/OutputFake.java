@@ -56,7 +56,7 @@ public final class OutputFake implements Output {
     }
 
     @Override
-    public void accept(RelpBatch batch) {
+    public void accept(final RelpBatch batch) {
         // No functionality for a fake
     }
 }

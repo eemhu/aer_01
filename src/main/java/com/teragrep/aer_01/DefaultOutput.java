@@ -59,11 +59,14 @@ import org.slf4j.Logger;
  */
 public final class DefaultOutput implements Output {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOutput.class);
+    private final Pool<IManagedRelpConnection> relpConnectionPool;
+
     DefaultOutput(
-            String name,
-            RelpConnectionConfig relpConnectionConfig,
-            MetricRegistry metricRegistry,
-            SSLContextSupplier sslContextSupplier
+            final String name,
+            final RelpConnectionConfig relpConnectionConfig,
+            final MetricRegistry metricRegistry,
+            final SSLContextSupplier sslContextSupplier
     ) {
         this(
                 new UnboundPool<>(
@@ -79,17 +82,14 @@ public final class DefaultOutput implements Output {
         );
     }
 
-    DefaultOutput(Pool<IManagedRelpConnection> relpConnectionPool) {
+    DefaultOutput(final Pool<IManagedRelpConnection> relpConnectionPool) {
         this.relpConnectionPool = relpConnectionPool;
         LOGGER.info("DefaultOutput constructor done");
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOutput.class);
-    private final Pool<IManagedRelpConnection> relpConnectionPool;
-
     @Override
     public void accept(final RelpBatch batch) {
-        IManagedRelpConnection connection = relpConnectionPool.get();
+        final IManagedRelpConnection connection = relpConnectionPool.get();
         connection.ensureSent(batch);
         relpConnectionPool.offer(connection);
     }

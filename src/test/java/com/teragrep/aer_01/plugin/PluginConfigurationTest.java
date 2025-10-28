@@ -61,28 +61,28 @@ public final class PluginConfigurationTest {
 
     @Test
     void testPluginConfigurationDefault() {
-        PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake());
-        JsonStructure js = Assertions.assertDoesNotThrow(pluginCfg::asJson);
+        final PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake());
+        final JsonStructure js = Assertions.assertDoesNotThrow(pluginCfg::asJson);
 
-        // Should default to com.teragrep.aer_02.plugin.DefaultPluginFactory
+        // Should default to com.teragrep.aer_01.plugin.DefaultPluginFactory
         Assertions
                 .assertEquals(NLFPluginFactory.class.getName(), js.asJsonObject().getString("defaultPluginFactoryClass"));
     }
 
     @Test
     void testPluginConfigurationFromFile() {
-        Map<String, String> config = new HashMap<>();
+        final Map<String, String> config = new HashMap<>();
         config.put("plugins.config.path", "src/test/resources/plugincfg.json");
-        PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
-        JsonStructure js = Assertions.assertDoesNotThrow(pluginCfg::asJson);
+        final PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
+        final JsonStructure js = Assertions.assertDoesNotThrow(pluginCfg::asJson);
 
-        // Should default to com.teragrep.aer_02.fakes.ThrowingPluginFactory
+        // Should default to com.teragrep.aer_01.fakes.ThrowingPluginFactory
         Assertions
                 .assertEquals(
                         "com.teragrep.aer_01.fakes.ThrowingPluginFactory",
                         js.asJsonObject().getString("defaultPluginFactoryClass")
                 );
-        // Should also have com.teragrep.aer_02.plugin.DefaultPluginFactory for resourceId="123"
+        // Should also have com.teragrep.aer_01.plugin.DefaultPluginFactory for resourceId="123"
         Assertions
                 .assertEquals("123", js.asJsonObject().getJsonArray("resourceIds").getJsonObject(0).getString("resourceId"));
         Assertions
@@ -93,17 +93,17 @@ public final class PluginConfigurationTest {
 
     @Test
     void testMissingConfig() {
-        Map<String, String> config = new HashMap<>();
+        final Map<String, String> config = new HashMap<>();
         config.put("plugins.config.path", "src/test/resources/missing_config.json");
-        PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
+        final PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
         Assertions.assertThrows(FileNotFoundException.class, pluginCfg::asJson);
     }
 
     @Test
     void testInvalidSyntaxConfig() {
-        Map<String, String> config = new HashMap<>();
+        final Map<String, String> config = new HashMap<>();
         config.put("plugins.config.path", "src/test/resources/invalid_syntax_config.json");
-        PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
+        final PluginConfiguration pluginCfg = new PluginConfiguration(new SourceableFake(config));
         Assertions.assertThrows(JsonParsingException.class, pluginCfg::asJson);
     }
 

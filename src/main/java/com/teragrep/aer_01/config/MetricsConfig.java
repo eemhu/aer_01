@@ -52,7 +52,7 @@ public final class MetricsConfig {
 
     private final int prometheusPort;
 
-    public MetricsConfig(Sourceable configSource) {
+    public MetricsConfig(final Sourceable configSource) {
         this(Integer.parseInt(configSource.source("metrics.prometheusPort", "1234")));
     }
 

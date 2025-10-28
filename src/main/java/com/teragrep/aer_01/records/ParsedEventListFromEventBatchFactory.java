@@ -80,7 +80,7 @@ public final class ParsedEventListFromEventBatchFactory {
     }
 
     public List<ParsedEvent> parsedEvents() {
-        final List<ParsedEvent> rv = new ArrayList<>();
+        final List<ParsedEvent> parsedEvents = new ArrayList<>();
         final PartitionContext partitionContext = eventBatchContext.getPartitionContext();
         final List<EventData> eventDatas = eventBatchContext.getEvents();
 
@@ -129,10 +129,10 @@ public final class ParsedEventListFromEventBatchFactory {
                     )
             ).parsedEvent();
 
-            rv.add(pe);
+            parsedEvents.add(pe);
         }
 
-        return rv;
+        return parsedEvents;
     }
 
     @Override

@@ -78,7 +78,7 @@ public final class SourceableFake implements Sourceable {
         map.putIfAbsent("relp.max.idle.duration", Duration.ofMillis(150000L).toString());
         map.putIfAbsent("relp.max.idle.enabled", "false");
         map.putIfAbsent("relp.connection.keepalive", "true");
-        map.putIfAbsent("syslog.appname", "aer-02");
+        map.putIfAbsent("syslog.appname", "aer-01");
         map.putIfAbsent("syslog.hostname", "localhost.localdomain");
         return map.getOrDefault(name, defaultValue);
     }
