@@ -79,7 +79,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public final class EventDataConsumerTest {
+public final class EventBatchConsumerTest {
     private Server server;
     private EventLoop eventLoop;
     private Thread eventLoopThread;
@@ -137,7 +137,7 @@ public final class EventDataConsumerTest {
                         new ManagedRelpConnectionStub()
                 )
         );
-        EventDataConsumer edc = new EventDataConsumer(
+        EventBatchConsumer edc = new EventBatchConsumer(
                 new ParsedEventConsumer(
                 output,
                 new HashMap<>(),
@@ -202,7 +202,7 @@ public final class EventDataConsumerTest {
                         new ManagedRelpConnectionStub()
                 )
         );
-        EventDataConsumer edc = new EventDataConsumer(
+        EventBatchConsumer edc = new EventBatchConsumer(
                 new ParsedEventConsumer(
                         output,
                         new HashMap<>(),

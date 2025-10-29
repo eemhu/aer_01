@@ -165,7 +165,7 @@ public final class ParsedEventConsumer implements AutoCloseable, Consumer<List<P
             final long timestampSecs = Instant.parse(syslogMessage.getTimestamp()).toEpochMilli() / 1000L;
 
             metricRegistry
-                    .gauge(name(EventDataConsumer.class, "latency-seconds", partitionParams.get(0).getParamValue()), () -> (Gauge<Long>) () -> Instant.now().getEpochSecond() - timestampSecs);
+                    .gauge(name(ParsedEventConsumer.class, "latency-seconds", partitionParams.get(0).getParamValue()), () -> (Gauge<Long>) () -> Instant.now().getEpochSecond() - timestampSecs);
 
             batch.insert(syslogMessage.toRfc5424SyslogMessage().getBytes(StandardCharsets.UTF_8));
         }

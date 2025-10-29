@@ -103,7 +103,7 @@ public final class Main {
         final JmxReporter jmxReporter = JmxReporter.forRegistry(metricRegistry).build();
         final Slf4jReporter slf4jReporter = Slf4jReporter
                 .forRegistry(metricRegistry)
-                .outputTo(LoggerFactory.getLogger(EventDataConsumer.class))
+                .outputTo(LoggerFactory.getLogger(EventBatchConsumer.class))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
@@ -163,7 +163,7 @@ public final class Main {
 
         final DefaultOutput dOutput = new DefaultOutput(relpConnectionPool);
 
-        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(new ParsedEventConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry))) {
+        try (final EventBatchConsumer PARTITION_PROCESSOR = new EventBatchConsumer(new ParsedEventConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry))) {
             final AzureConfig azureConfig = new AzureConfig(configSource);
             final ErrorContextConsumer ERROR_HANDLER = new ErrorContextConsumer();
 

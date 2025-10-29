@@ -47,15 +47,14 @@ package com.teragrep.aer_01;
 
 import com.azure.messaging.eventhubs.models.EventBatchContext;
 import com.teragrep.aer_01.records.ParsedEventListFromEventBatchFactory;
-import com.teragrep.akv_01.plugin.*;
 
 import java.util.function.Consumer;
 
-public final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchContext> {
+public final class EventBatchConsumer implements AutoCloseable, Consumer<EventBatchContext> {
 
     private final ParsedEventConsumer parsedEventConsumer;
 
-    EventDataConsumer(
+    EventBatchConsumer(
         final ParsedEventConsumer parsedEventConsumer
     ) {
         this.parsedEventConsumer = parsedEventConsumer;
