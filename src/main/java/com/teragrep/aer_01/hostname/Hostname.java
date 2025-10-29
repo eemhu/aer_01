@@ -43,33 +43,52 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01;
+package com.teragrep.aer_01.hostname;
 
-import com.teragrep.aer_01.fakes.ThrowingFakeHostnameSource;
-import com.teragrep.aer_01.hostname.Hostname;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Objects;
 
-public final class HostnameTest {
+public final class Hostname {
 
-    @Test
-    void testHostname() {
-        final Hostname hostname = new Hostname("default");
-        Assertions
-                .assertEquals(Assertions.assertDoesNotThrow(() -> InetAddress.getLocalHost().getHostName()), hostname.hostname());
+    private final HostnameSource hostnameSource;
+    private final String defaultHostname;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Hostname.class);
+
+    public Hostname(final String defaultHostname) {
+        this(defaultHostname, new JavaHostnameSource());
     }
 
-    @Test
-    void testDefaultHostname() {
-        final Hostname hostname = new Hostname("default", new ThrowingFakeHostnameSource());
-        Assertions.assertEquals("default", hostname.hostname());
+    public Hostname(final String defaultHostname, final HostnameSource hostnameSource) {
+        this.hostnameSource = hostnameSource;
+        this.defaultHostname = defaultHostname;
     }
 
-    @Test
-    void testEqualsContract() {
-        EqualsVerifier.forClass(Hostname.class).verify();
+    public String hostname() {
+        String rv;
+        try {
+            rv = hostnameSource.hostname();
+        }
+        catch (final UnknownHostException e) {
+            rv = defaultHostname;
+            LOGGER.warn("Could not determine hostname, defaulting to <{}>", defaultHostname, e);
+        }
+        return rv;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Hostname hostname = (Hostname) o;
+        return Objects.equals(hostnameSource, hostname.hostnameSource) && Objects.equals(defaultHostname, hostname.defaultHostname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hostnameSource, defaultHostname);
     }
 }

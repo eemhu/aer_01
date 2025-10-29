@@ -43,33 +43,15 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01;
+package com.teragrep.aer_01.fakes;
 
-import com.teragrep.aer_01.fakes.ThrowingFakeHostnameSource;
-import com.teragrep.aer_01.hostname.Hostname;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.teragrep.aer_01.hostname.HostnameSource;
 
-import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-public final class HostnameTest {
-
-    @Test
-    void testHostname() {
-        final Hostname hostname = new Hostname("default");
-        Assertions
-                .assertEquals(Assertions.assertDoesNotThrow(() -> InetAddress.getLocalHost().getHostName()), hostname.hostname());
-    }
-
-    @Test
-    void testDefaultHostname() {
-        final Hostname hostname = new Hostname("default", new ThrowingFakeHostnameSource());
-        Assertions.assertEquals("default", hostname.hostname());
-    }
-
-    @Test
-    void testEqualsContract() {
-        EqualsVerifier.forClass(Hostname.class).verify();
+public final class ThrowingFakeHostnameSource implements HostnameSource {
+    @Override
+    public String hostname() throws UnknownHostException {
+        throw new UnknownHostException("Fake hostname source throws an exception");
     }
 }

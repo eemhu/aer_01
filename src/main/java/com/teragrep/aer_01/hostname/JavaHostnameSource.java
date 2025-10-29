@@ -43,50 +43,14 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.aer_01;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.teragrep.aer_01.hostname;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Objects;
 
-public final class Hostname {
-
-    private final String defaultHostname;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Hostname.class);
-
-    public Hostname(final String defaultHostname) {
-        this.defaultHostname = defaultHostname;
-    }
-
-    public String hostname() {
-        String rv;
-        try {
-            rv = InetAddress.getLocalHost().getHostName();
-        }
-        catch (final UnknownHostException e) {
-            rv = defaultHostname;
-            LOGGER.warn("Could not determine hostname, defaulting to <{}>", defaultHostname, e);
-        }
-        return rv;
-    }
-
+public final class JavaHostnameSource implements HostnameSource {
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Hostname hostname = (Hostname) o;
-        return Objects.equals(defaultHostname, hostname.defaultHostname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(defaultHostname);
+    public String hostname() throws UnknownHostException {
+        return InetAddress.getLocalHost().getHostName();
     }
 }

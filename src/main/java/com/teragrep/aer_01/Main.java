@@ -62,6 +62,7 @@ import com.teragrep.aer_01.config.*;
 import com.teragrep.aer_01.config.source.EnvironmentSource;
 import com.teragrep.aer_01.config.source.PropertySource;
 import com.teragrep.aer_01.config.source.Sourceable;
+import com.teragrep.aer_01.hostname.Hostname;
 import com.teragrep.aer_01.plugin.MappedPluginFactories;
 import com.teragrep.aer_01.plugin.WrappedPluginFactoryWithConfig;
 import com.teragrep.aer_01.tls.AzureSSLContextSupplier;
