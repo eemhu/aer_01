@@ -46,132 +46,24 @@
 package com.teragrep.aer_01;
 
 import com.azure.messaging.eventhubs.models.EventBatchContext;
-import com.codahale.metrics.Gauge;
-import com.codahale.metrics.MetricRegistry;
-import com.teragrep.aer_01.plugin.ParsedEventWithException;
-import com.teragrep.aer_01.plugin.WrappedPluginFactoryWithConfig;
 import com.teragrep.aer_01.records.ParsedEventListFromEventBatchFactory;
-import com.teragrep.aer_01.records.EventRecords;
-import com.teragrep.akv_01.event.ParsedEvent;
 import com.teragrep.akv_01.plugin.*;
-import com.teragrep.rlo_14.SDElement;
-import com.teragrep.rlo_14.SDParam;
-import com.teragrep.rlo_14.SyslogMessage;
-import com.teragrep.rlp_01.RelpBatch;
-import jakarta.json.JsonException;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import static com.codahale.metrics.MetricRegistry.name;
 
 public final class EventDataConsumer implements AutoCloseable, Consumer<EventBatchContext> {
 
-    private final Output output;
-    private final Map<String, WrappedPluginFactoryWithConfig> pluginFactories;
-    private final MetricRegistry metricRegistry;
-    private final WrappedPluginFactoryWithConfig defaultPluginFactory;
-    private final WrappedPluginFactoryWithConfig exceptionPluginFactory;
+    private final ParsedEventConsumer parsedEventConsumer;
 
     EventDataConsumer(
-            final Output output,
-            final Map<String, WrappedPluginFactoryWithConfig> pluginFactories,
-            final WrappedPluginFactoryWithConfig defaultPluginFactory,
-            final WrappedPluginFactoryWithConfig exceptionPluginFactory,
-            final MetricRegistry metricRegistry
+        final ParsedEventConsumer parsedEventConsumer
     ) {
-        this.metricRegistry = metricRegistry;
-        this.pluginFactories = pluginFactories;
-        this.exceptionPluginFactory = exceptionPluginFactory;
-        this.defaultPluginFactory = defaultPluginFactory;
-        this.output = output;
+        this.parsedEventConsumer = parsedEventConsumer;
     }
 
-    public void accept(final List<ParsedEvent> parsedEvents) {
-        for (final ParsedEvent initialEvent : parsedEvents) {
-            for (final ParsedEvent parsedEvent : new EventRecords(initialEvent).records()) {
-                WrappedPluginFactoryWithConfig pluginFactoryWithConfig;
-                if (parsedEvent.isJsonStructure()) {
-                    try {
-                        final String resourceId = parsedEvent.resourceId();
-                        pluginFactoryWithConfig = pluginFactories.getOrDefault(resourceId, defaultPluginFactory);
-                    }
-                    catch (final JsonException ignored) {
-                        // no resourceId in json
-                        pluginFactoryWithConfig = defaultPluginFactory;
-                    }
-                }
-                else {
-                    // non-json event
-                    pluginFactoryWithConfig = defaultPluginFactory;
-                }
-
-                final Plugin plugin = pluginFactoryWithConfig
-                        .pluginFactory()
-                        .plugin(pluginFactoryWithConfig.pluginFactoryConfig().configPath());
-
-                List<SyslogMessage> syslogMessages;
-                try {
-                    syslogMessages = plugin.syslogMessage(parsedEvent);
-                }
-                catch (final PluginException e) {
-                    try {
-                        syslogMessages = exceptionPluginFactory
-                                .pluginFactory()
-                                .plugin(exceptionPluginFactory.pluginFactoryConfig().configPath())
-                                .syslogMessage(new ParsedEventWithException(parsedEvent, e));
-                    }
-                    catch (final PluginException e2) {
-                        throw new IllegalStateException("Exception plugin failed!", e2);
-                    }
-                }
-
-                sendToOutput(syslogMessages);
-            }
-        }
-    }
-
-    private void sendToOutput(final List<SyslogMessage> syslogMessages) {
-        final RelpBatch batch = new RelpBatch();
-
-        for (final SyslogMessage syslogMessage : syslogMessages) {
-            final List<SDElement> partitionElements = syslogMessage
-                    .getSDElements()
-                    .stream()
-                    .filter(sdElement -> sdElement.getSdID().equals("aer_01_partition@48577"))
-                    .collect(Collectors.toList());
-            if (partitionElements.isEmpty()) {
-                throw new IllegalStateException("SDElement aer_01_partition@48577 not found");
-            }
-
-            final List<SDParam> partitionParams = partitionElements
-                    .get(0)
-                    .getSdParams()
-                    .stream()
-                    .filter(sdParam -> sdParam.getParamName().equals("partition_id"))
-                    .collect(Collectors.toList());
-            if (partitionParams.isEmpty()) {
-                throw new IllegalStateException("SDParam partition_id not found in SDElement aer_01_partition@48577");
-            }
-
-            final long timestampSecs = Instant.parse(syslogMessage.getTimestamp()).toEpochMilli() / 1000L;
-
-            metricRegistry
-                    .gauge(name(EventDataConsumer.class, "latency-seconds", partitionParams.get(0).getParamValue()), () -> (Gauge<Long>) () -> Instant.now().getEpochSecond() - timestampSecs);
-
-            batch.insert(syslogMessage.toRfc5424SyslogMessage().getBytes(StandardCharsets.UTF_8));
-        }
-
-        output.accept(batch);
-    }
-    
     @Override
     public void accept(final EventBatchContext eventBatchContext) {
-        accept(new ParsedEventListFromEventBatchFactory(eventBatchContext).parsedEvents());
+        parsedEventConsumer.accept(new ParsedEventListFromEventBatchFactory(eventBatchContext).parsedEvents());
 
         // Update checkpoint after each event batch
         eventBatchContext.updateCheckpoint();
@@ -179,6 +71,6 @@ public final class EventDataConsumer implements AutoCloseable, Consumer<EventBat
 
     @Override
     public void close() {
-        output.close();
+        parsedEventConsumer.close();
     }
 }

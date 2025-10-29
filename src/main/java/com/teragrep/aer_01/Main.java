@@ -163,7 +163,7 @@ public final class Main {
 
         final DefaultOutput dOutput = new DefaultOutput(relpConnectionPool);
 
-        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry)) {
+        try (final EventDataConsumer PARTITION_PROCESSOR = new EventDataConsumer(new ParsedEventConsumer(dOutput, pluginFactories, defaultPluginFactory, exceptionPluginFactory, metricRegistry))) {
             final AzureConfig azureConfig = new AzureConfig(configSource);
             final ErrorContextConsumer ERROR_HANDLER = new ErrorContextConsumer();
 

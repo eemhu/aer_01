@@ -140,12 +140,13 @@ public final class EventDataConsumerTest {
                 )
         );
         EventDataConsumer edc = new EventDataConsumer(
+                new ParsedEventConsumer(
                 output,
                 new HashMap<>(),
                 Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
                 Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
                 metricRegistry
-        );
+        ));
 
         edc.accept(new EventBatchContextFactoryImpl(10).eventBatchContext());
         Assertions.assertEquals(10, messages.size());
@@ -204,11 +205,13 @@ public final class EventDataConsumerTest {
                 )
         );
         EventDataConsumer edc = new EventDataConsumer(
-                output,
-                new HashMap<>(),
-                Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
-                Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
-                metricRegistry
+                new ParsedEventConsumer(
+                        output,
+                        new HashMap<>(),
+                        Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
+                        Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
+                        metricRegistry
+                )
         );
 
         edc.accept(new EventBatchContextFactoryImpl(10).eventBatchContext());
