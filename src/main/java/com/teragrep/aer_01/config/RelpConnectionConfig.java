@@ -52,6 +52,9 @@ import com.teragrep.rlp_01.client.SocketConfigImpl;
 
 import java.time.Duration;
 
+/**
+ * Configuration object for RELP connection related options
+ */
 public final class RelpConnectionConfig {
 
     private final int connectTimeout;
@@ -66,6 +69,10 @@ public final class RelpConnectionConfig {
     private final boolean maxIdleEnabled;
     private final boolean keepAlive;
 
+    /**
+     * Initialize RelpConnectionConfig using a {@link Sourceable} as the source.
+     * @param configSource {@link Sourceable}
+     */
     public RelpConnectionConfig(final Sourceable configSource) {
         this(
                 Integer.parseInt(configSource.source("relp.connection.timeout", "2500")),
@@ -82,6 +89,20 @@ public final class RelpConnectionConfig {
         );
     }
 
+    /**
+     * Initialize RelpConnectionConfig directly with the configuration values.
+     * @param connectTimeout relp.connection.timeout
+     * @param readTimeout relp.transaction.read.timeout
+     * @param writeTimeout relp.transaction.write.timeout
+     * @param reconnectInt relp.connection.retry.interval
+     * @param port relp.connection.port
+     * @param addr relp.connection.address
+     * @param rebindRequestAmount relp.rebind.request.amount
+     * @param rebindEnabled relp.rebind.enabled
+     * @param maxIdle relp.max.idle.duration
+     * @param maxIdleEnabled relp.max.idle.enabled
+     * @param keepAlive relp.connection.keepalive
+     */
     public RelpConnectionConfig(
             final int connectTimeout,
             final int readTimeout,
@@ -150,26 +171,44 @@ public final class RelpConnectionConfig {
         return address;
     }
 
+    /**
+     * @return relp.max.idle.enabled
+     */
     public boolean maxIdleEnabled() {
         return maxIdleEnabled;
     }
 
+    /**
+     * @return relp.max.idle.duration
+     */
     public Duration maxIdle() {
         return maxIdle;
     }
 
+    /**
+     * @return relp.rebind.enabled
+     */
     public boolean rebindEnabled() {
         return rebindEnabled;
     }
 
+    /**
+     * @return relp.rebind.request.amount
+     */
     public int rebindRequestAmount() {
         return rebindRequestAmount;
     }
 
+    /**
+     * @return relp.connection.keepalive
+     */
     public boolean keepAlive() {
         return keepAlive;
     }
 
+    /**
+     * @return rlp_01 RelpConfig object
+     */
     public RelpConfig asRelpConfig() {
         return new RelpConfig(
                 relpAddress(),
@@ -182,6 +221,9 @@ public final class RelpConnectionConfig {
         );
     }
 
+    /**
+     * @return rlp_01 SocketConfig object
+     */
     public SocketConfig asSocketConfig() {
         return new SocketConfigImpl(readTimeout(), writeTimeout(), connectTimeout(), keepAlive());
     }
