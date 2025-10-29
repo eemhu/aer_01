@@ -72,6 +72,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -83,18 +84,15 @@ public final class EventDataConsumerTest {
     private EventLoop eventLoop;
     private Thread eventLoopThread;
     private ExecutorService executorService;
-    private final List<String> messages = Collections.synchronizedList(new ArrayList<>());
+    private final Queue<String> messages = new ConcurrentLinkedQueue<>();
 
     @BeforeEach
     void setup() {
         messages.clear();
         this.executorService = Executors.newFixedThreadPool(1);
-        Consumer<FrameContext> syslogConsumer = new Consumer<FrameContext>() {
-            @Override
-            public synchronized void accept(FrameContext frameContext) {
-                final String payload = frameContext.relpFrame().payload().toString();
-                messages.add(payload);
-            }
+        Consumer<FrameContext> syslogConsumer = frameContext -> {
+            final String payload = frameContext.relpFrame().payload().toString();
+            messages.add(payload);
         };
 
         Supplier<FrameDelegate> frameDelegateSupplier = () -> new DefaultFrameDelegate(syslogConsumer);
