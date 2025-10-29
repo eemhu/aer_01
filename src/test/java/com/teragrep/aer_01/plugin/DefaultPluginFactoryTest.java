@@ -94,8 +94,8 @@ public final class DefaultPluginFactoryTest {
                 );
         Assertions.assertEquals(DefaultPlugin.class, plugin.getClass());
         Assertions.assertEquals("msg", msg.get(0).getMsg());
-        Assertions
-                .assertEquals(Instant.ofEpochMilli(now.toInstant(ZoneOffset.UTC).toEpochMilli()).toString(), msg.get(0).getTimestamp());
+        final String expectedTimestamp = Instant.ofEpochMilli(now.toInstant(ZoneOffset.UTC).toEpochMilli()).toString();
+        Assertions.assertEquals(expectedTimestamp, msg.get(0).getTimestamp());
     }
 
     @Test
