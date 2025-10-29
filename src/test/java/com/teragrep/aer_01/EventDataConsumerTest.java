@@ -47,7 +47,7 @@ package com.teragrep.aer_01;
 
 import com.codahale.metrics.MetricRegistry;
 import com.teragrep.aer_01.config.RelpConnectionConfig;
-import com.teragrep.aer_01.fakes.EventBatchContextFactoryImpl;
+import com.teragrep.aer_01.fakes.FakeEventBatchContextFactoryImpl;
 import com.teragrep.aer_01.plugin.WrappedPluginFactoryWithConfig;
 import com.teragrep.akv_01.plugin.PluginFactoryConfigImpl;
 import com.teragrep.akv_01.plugin.PluginFactoryInitialization;
@@ -148,7 +148,7 @@ public final class EventDataConsumerTest {
                 metricRegistry
         ));
 
-        edc.accept(new EventBatchContextFactoryImpl(10).eventBatchContext());
+        edc.accept(new FakeEventBatchContextFactoryImpl(10).eventBatchContext());
         Assertions.assertEquals(10, messages.size());
 
         int loops = 0;
@@ -214,7 +214,7 @@ public final class EventDataConsumerTest {
                 )
         );
 
-        edc.accept(new EventBatchContextFactoryImpl(10).eventBatchContext());
+        edc.accept(new FakeEventBatchContextFactoryImpl(10).eventBatchContext());
         Assertions.assertEquals(10, messages.size());
         Assertions.assertEquals(10L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.records").getCount());
         Assertions.assertEquals(1L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.connects").getCount());

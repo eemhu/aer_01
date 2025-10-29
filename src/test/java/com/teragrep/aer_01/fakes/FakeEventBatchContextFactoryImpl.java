@@ -55,10 +55,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class EventBatchContextFactoryImpl implements EventBatchContextFactory {
+public final class FakeEventBatchContextFactoryImpl implements EventBatchContextFactory {
     private final int batchSize;
 
-    public EventBatchContextFactoryImpl(final int batchSize) {
+    public FakeEventBatchContextFactoryImpl(final int batchSize) {
         this.batchSize = batchSize;
     }
 
