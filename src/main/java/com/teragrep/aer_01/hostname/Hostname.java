@@ -67,15 +67,15 @@ public final class Hostname {
     }
 
     public String hostname() {
-        String rv;
+        String hostname;
         try {
-            rv = hostnameSource.hostname();
+            hostname = hostnameSource.hostname();
         }
         catch (final UnknownHostException e) {
-            rv = defaultHostname;
+            hostname = defaultHostname;
             LOGGER.warn("Could not determine hostname, defaulting to <{}>", defaultHostname, e);
         }
-        return rv;
+        return hostname;
     }
 
     @Override

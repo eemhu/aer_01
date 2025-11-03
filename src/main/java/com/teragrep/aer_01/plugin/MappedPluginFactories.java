@@ -81,9 +81,9 @@ public final class MappedPluginFactories {
     }
 
     public Map<String, WrappedPluginFactoryWithConfig> asUnmodifiableMap() {
-        final Map<String, WrappedPluginFactoryWithConfig> rv = new HashMap<>();
-        pluginFactoryConfigs.forEach((id, cfg) -> rv.put(id, newWrappedPluginFactoryWithConfig(cfg)));
-        return Collections.unmodifiableMap(rv);
+        final Map<String, WrappedPluginFactoryWithConfig> pluginFactoriesWithConfig = new HashMap<>();
+        pluginFactoryConfigs.forEach((id, cfg) -> pluginFactoriesWithConfig.put(id, newWrappedPluginFactoryWithConfig(cfg)));
+        return Collections.unmodifiableMap(pluginFactoriesWithConfig);
     }
 
     public WrappedPluginFactoryWithConfig defaultPluginFactoryWithConfig() {
