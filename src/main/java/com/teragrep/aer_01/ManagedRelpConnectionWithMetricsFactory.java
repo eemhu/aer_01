@@ -53,47 +53,47 @@ import java.util.function.Supplier;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManagedRelpConnection> {
+public final class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManagedRelpConnection> {
 
     private final RelpConfig relpConfig;
     private final SocketConfig socketConfig;
     private final SSLContextSupplier sslContextSupplier;
     private final String name;
     private final MetricRegistry metricRegistry;
-    private static final Logger logger = LoggerFactory.getLogger(ManagedRelpConnectionWithMetricsFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ManagedRelpConnectionWithMetricsFactory.class);
 
     public ManagedRelpConnectionWithMetricsFactory(
-            String name,
-            MetricRegistry metricRegistry,
-            RelpConfig relpConfig
+            final String name,
+            final MetricRegistry metricRegistry,
+            final RelpConfig relpConfig
     ) {
         this(relpConfig, name, metricRegistry, new SocketConfigDefault());
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            RelpConfig relpConfig,
-            String name,
-            MetricRegistry metricRegistry,
-            SocketConfig socketConfig
+            final RelpConfig relpConfig,
+            final String name,
+            final MetricRegistry metricRegistry,
+            final SocketConfig socketConfig
     ) {
         this(relpConfig, name, metricRegistry, socketConfig, new SSLContextSupplierStub());
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            RelpConfig relpConfig,
-            String name,
-            MetricRegistry metricRegistry,
-            SSLContextSupplier sslContextSupplier
+            final RelpConfig relpConfig,
+            final String name,
+            final MetricRegistry metricRegistry,
+            final SSLContextSupplier sslContextSupplier
     ) {
         this(relpConfig, name, metricRegistry, new SocketConfigDefault(), sslContextSupplier);
     }
 
     public ManagedRelpConnectionWithMetricsFactory(
-            RelpConfig relpConfig,
-            String name,
-            MetricRegistry metricRegistry,
-            SocketConfig socketConfig,
-            SSLContextSupplier sslContextSupplier
+            final RelpConfig relpConfig,
+            final String name,
+            final MetricRegistry metricRegistry,
+            final SocketConfig socketConfig,
+            final SSLContextSupplier sslContextSupplier
     ) {
         this.relpConfig = relpConfig;
         this.name = name;
@@ -104,8 +104,8 @@ public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManage
 
     @Override
     public IManagedRelpConnection get() {
-        logger.info("get() called for new IManagedRelpConnection");
-        IRelpConnection relpConnection;
+        LOGGER.info("get() called for new IManagedRelpConnection");
+        final IRelpConnection relpConnection;
         if (sslContextSupplier.isStub()) {
             relpConnection = new RelpConnectionWithConfig(new RelpConnection(), relpConfig);
         }
@@ -121,20 +121,29 @@ public class ManagedRelpConnectionWithMetricsFactory implements Supplier<IManage
         relpConnection.setConnectionTimeout(socketConfig.connectTimeout());
         relpConnection.setKeepAlive(socketConfig.keepAlive());
 
-        IManagedRelpConnection managedRelpConnection = new ManagedRelpConnectionWithMetrics(
+        final IManagedRelpConnection managedRelpConnection = new ManagedRelpConnectionWithMetrics(
                 relpConnection,
                 name,
                 metricRegistry
         );
 
+        final IManagedRelpConnection connectionWithPossibleRebindEnabled;
         if (relpConfig.rebindEnabled) {
-            managedRelpConnection = new RebindableRelpConnection(managedRelpConnection, relpConfig.rebindRequestAmount);
+            connectionWithPossibleRebindEnabled = new RebindableRelpConnection(managedRelpConnection, relpConfig.rebindRequestAmount);
+        }
+        else {
+            connectionWithPossibleRebindEnabled = managedRelpConnection;
         }
 
+        final IManagedRelpConnection connectionWithPossibleMaxIdleEnabled;
         if (relpConfig.maxIdleEnabled) {
-            managedRelpConnection = new RenewableRelpConnection(managedRelpConnection, relpConfig.maxIdle);
+            connectionWithPossibleMaxIdleEnabled = new RenewableRelpConnection(connectionWithPossibleRebindEnabled, relpConfig.maxIdle);
         }
-        logger.info("returning new managedRelpConnection");
-        return managedRelpConnection;
+        else {
+            connectionWithPossibleMaxIdleEnabled = connectionWithPossibleRebindEnabled;
+        }
+
+        LOGGER.info("returning new managedRelpConnection");
+        return connectionWithPossibleMaxIdleEnabled;
     }
 }
