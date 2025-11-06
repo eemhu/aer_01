@@ -53,15 +53,18 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class EventPartitionContextFromPojo implements EventPartitionContext {
+
     private final PartitionContext partitionContext;
+
     public EventPartitionContextFromPojo(final PartitionContext partitionContext) {
         this.partitionContext = partitionContext;
     }
+
     @Override
     public Map<String, Object> asMap() {
         final Map<String, Object> m = new HashMap<>();
         m.put("FullyQualifiedNamespace", partitionContext.getFullyQualifiedNamespace());
-        m.put("EventHubName",  partitionContext.getEventHubName());
+        m.put("EventHubName", partitionContext.getEventHubName());
         m.put("PartitionId", partitionContext.getPartitionId());
         m.put("ConsumerGroup", partitionContext.getConsumerGroup());
         return m;

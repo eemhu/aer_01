@@ -82,7 +82,8 @@ public final class MappedPluginFactories {
 
     public Map<String, WrappedPluginFactoryWithConfig> asUnmodifiableMap() {
         final Map<String, WrappedPluginFactoryWithConfig> pluginFactoriesWithConfig = new HashMap<>();
-        pluginFactoryConfigs.forEach((id, cfg) -> pluginFactoriesWithConfig.put(id, newWrappedPluginFactoryWithConfig(cfg)));
+        pluginFactoryConfigs
+                .forEach((id, cfg) -> pluginFactoriesWithConfig.put(id, newWrappedPluginFactoryWithConfig(cfg)));
         return Collections.unmodifiableMap(pluginFactoriesWithConfig);
     }
 
@@ -107,8 +108,8 @@ public final class MappedPluginFactories {
             );
         }
         catch (
-                final ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException
-                | IllegalAccessException e
+            final ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException
+                    | IllegalAccessException e
         ) {
             LOGGER.error("Error initializing plugin factory: <[{}]>", cfg.pluginFactoryClassName(), e);
             throw new IllegalStateException("Error initializing plugin factory", e);

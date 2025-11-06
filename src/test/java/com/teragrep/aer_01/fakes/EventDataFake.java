@@ -43,15 +43,14 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-
 package com.teragrep.aer_01.fakes;
 
 import com.azure.messaging.eventhubs.EventData;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
 public class EventDataFake extends EventData {
+
     public EventDataFake() {
         super("foo");
     }

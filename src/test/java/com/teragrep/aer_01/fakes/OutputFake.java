@@ -43,13 +43,13 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-
 package com.teragrep.aer_01.fakes;
 
 import com.teragrep.aer_01.Output;
 import com.teragrep.rlp_01.RelpBatch;
 
 public final class OutputFake implements Output {
+
     @Override
     public void close() {
         // No functionality for a fake

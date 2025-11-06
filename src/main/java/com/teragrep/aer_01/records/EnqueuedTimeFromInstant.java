@@ -53,6 +53,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public final class EnqueuedTimeFromInstant implements EnqueuedTime {
+
     private final Instant instant;
 
     public EnqueuedTimeFromInstant(final Instant instant) {

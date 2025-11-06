@@ -43,7 +43,6 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-
 package com.teragrep.aer_01.fakes;
 
 import com.teragrep.rlp_01.RelpBatch;

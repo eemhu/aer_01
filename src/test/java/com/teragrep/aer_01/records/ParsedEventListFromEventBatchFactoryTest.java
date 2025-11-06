@@ -61,33 +61,31 @@ import java.util.List;
 import java.util.Map;
 
 public final class ParsedEventListFromEventBatchFactoryTest {
+
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(ParsedEventListFromEventBatchFactory.class)
-                .withPrefabValues(EventBatchContext.class, new EventBatchContext(
-                        new PartitionContext("name","eh","consumer","pid"),
-                        Collections.singletonList(new EventData("foo")),
-                        new CheckpointStoreFake(),
-                        new LastEnqueuedEventProperties(0L,0L, Instant.now(),Instant.now())
-                ),
-                        new EventBatchContext(
-                                new PartitionContext("name","eh","consumer","pid"),
+        EqualsVerifier
+                .forClass(ParsedEventListFromEventBatchFactory.class)
+                .withPrefabValues(
+                        EventBatchContext.class, new EventBatchContext(
+                                new PartitionContext("name", "eh", "consumer", "pid"),
                                 Collections.singletonList(new EventData("foo")),
                                 new CheckpointStoreFake(),
-                                new LastEnqueuedEventProperties(0L,0L, Instant.now(),Instant.now())
-                        ))
+                                new LastEnqueuedEventProperties(0L, 0L, Instant.now(), Instant.now())
+                        ), new EventBatchContext(
+                                new PartitionContext("name", "eh", "consumer", "pid"),
+                                Collections.singletonList(new EventData("foo")),
+                                new CheckpointStoreFake(),
+                                new LastEnqueuedEventProperties(0L, 0L, Instant.now(), Instant.now())
+                        )
+                )
                 .verify();
     }
 
     @Test
     void testIdealCase() {
         ParsedEventListFromEventBatchFactory factory = new ParsedEventListFromEventBatchFactory(
-                new EventBatchContext(
-                        new PartitionContext("name","eh","consumer","pid"),
-                        Collections.singletonList(new EventData("foo")),
-                        new CheckpointStoreFake(),
-                        new LastEnqueuedEventProperties(0L,0L, Instant.now(),Instant.now())
-                )
+                new EventBatchContext(new PartitionContext("name", "eh", "consumer", "pid"), Collections.singletonList(new EventData("foo")), new CheckpointStoreFake(), new LastEnqueuedEventProperties(0L, 0L, Instant.now(), Instant.now()))
         );
 
         final List<ParsedEvent> parsedEvents = factory.parsedEvents();
@@ -110,12 +108,7 @@ public final class ParsedEventListFromEventBatchFactoryTest {
     @Test
     void testCaseWithoutLastEnqueuedEvent() {
         ParsedEventListFromEventBatchFactory factory = new ParsedEventListFromEventBatchFactory(
-                new EventBatchContext(
-                        new PartitionContext("name","eh","consumer","pid"),
-                        Collections.singletonList(new EventData("foo")),
-                        new CheckpointStoreFake(),
-                        null
-                )
+                new EventBatchContext(new PartitionContext("name", "eh", "consumer", "pid"), Collections.singletonList(new EventData("foo")), new CheckpointStoreFake(), null)
         );
 
         final List<ParsedEvent> parsedEvents = factory.parsedEvents();

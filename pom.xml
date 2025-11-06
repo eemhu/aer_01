@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.teragrep</groupId>
   <artifactId>aer_01</artifactId>
-  <packaging>jar</packaging>
   <version>${revision}${sha1}${changelist}</version>
+  <packaging>jar</packaging>
   <name>aer_01</name>
   <description>Azure Eventhub Reader</description>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>11</java.version>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <revision>0.0.1</revision>
-    <changelist>-SNAPSHOT</changelist>
-    <sha1/>
-    <metrics.version>4.2.8</metrics.version>
-    <prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
-  </properties>
-
   <licenses>
     <license>
       <name>GNU Affero General Public License v3.0</name>
       <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
     </license>
   </licenses>
-
   <developers>
     <developer>
       <name>Mikko Kortelainen</name>
@@ -35,74 +21,83 @@
       <organizationUrl>https://teragrep.com</organizationUrl>
     </developer>
   </developers>
-
   <scm>
     <connection>scm:git:https://github.com/teragrep/aer_01.git</connection>
     <developerConnection>scm:git:git@github.com:teragrep/aer_01.git</developerConnection>
     <url>https://github.com/teragrep/aer_01/tree/master</url>
   </scm>
-
+  <properties>
+    <changelist>-SNAPSHOT</changelist>
+    <java.version>11</java.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <metrics.version>4.2.8</metrics.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <prometheus-simpleclient.version>0.16.0</prometheus-simpleclient.version>
+    <revision>0.0.1</revision>
+    <sha1></sha1>
+  </properties>
   <dependencies>
-      <!-- relp server for testing -->
-      <dependency>
-          <groupId>com.teragrep</groupId>
-          <artifactId>rlp_03</artifactId>
-          <version>10.0.0</version>
-          <scope>test</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.teragrep</groupId>
-          <artifactId>rlo_06</artifactId>
-          <version>9.0.1</version>
-          <scope>test</scope>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
-      <dependency>
-          <groupId>nl.jqno.equalsverifier</groupId>
-          <artifactId>equalsverifier</artifactId>
-          <version>3.19.4</version>
-          <scope>test</scope>
-      </dependency>
-      <!-- JSON libraries -->
-      <dependency>
-          <groupId>jakarta.json</groupId>
-          <artifactId>jakarta.json-api</artifactId>
-          <version>2.1.3</version>
-      </dependency>
-      <dependency>
-          <groupId>org.eclipse.parsson</groupId>
-          <artifactId>parsson</artifactId>
-          <version>1.1.7</version>
-      </dependency>
-      <!-- Plugin functionality -->
-      <dependency>
-          <groupId>com.teragrep</groupId>
-          <artifactId>nlf_01</artifactId>
-          <version>3.3.0</version>
-      </dependency>
-      <dependency>
-          <groupId>com.teragrep</groupId>
-          <artifactId>akv_01</artifactId>
-          <version>6.3.1</version>
-      </dependency>
+    <!-- relp server for testing -->
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>rlp_03</artifactId>
+      <version>10.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>rlo_06</artifactId>
+      <version>9.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>3.19.4</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- JSON libraries -->
+    <dependency>
+      <groupId>jakarta.json</groupId>
+      <artifactId>jakarta.json-api</artifactId>
+      <version>2.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.parsson</groupId>
+      <artifactId>parsson</artifactId>
+      <version>1.1.7</version>
+    </dependency>
+    <!-- Plugin functionality -->
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>nlf_01</artifactId>
+      <version>3.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>akv_01</artifactId>
+      <version>6.3.1</version>
+    </dependency>
     <!-- RELP sending library -->
     <dependency>
       <groupId>com.teragrep</groupId>
       <artifactId>rlp_01</artifactId>
       <version>5.0.0</version>
     </dependency>
-      <!-- Azure KeyVault -->
-      <!-- https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/keyvault/azure-security-keyvault-jca#client-side-ssl -->
-      <dependency>
-          <groupId>com.azure</groupId>
-          <artifactId>azure-security-keyvault-jca</artifactId>
-          <version>2.10.1</version>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.httpcomponents.core5</groupId>
-          <artifactId>httpcore5</artifactId>
-          <version>5.3.6</version>
-      </dependency>
+    <!-- Azure KeyVault -->
+    <!-- https://github.com/Azure/azure-sdk-for-java/tree/main/sdk/keyvault/azure-security-keyvault-jca#client-side-ssl -->
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-security-keyvault-jca</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5</artifactId>
+      <version>5.3.6</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
     <!-- handles json stuff -->
     <dependency>
@@ -110,7 +105,6 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-
     <!-- azure -->
     <dependency>
       <groupId>com.azure</groupId>
@@ -188,7 +182,6 @@
       <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
-
     <!-- logging -->
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl -->
     <dependency>
@@ -214,7 +207,6 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.7</version>
     </dependency>
-
     <!-- Maven stuff -->
     <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-enforcer-plugin -->
     <dependency>
@@ -226,73 +218,65 @@
   <build>
     <finalName>${artifactId}</finalName>
     <plugins>
-        <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>2.43.0</version>
-            <configuration>
-                <java>
-                    <toggleOffOn></toggleOffOn>
-                    <eclipse>
-                        <file>${project.basedir}/eclipse-java-formatter.xml</file>
-                        <version>4.10.0</version>
-                    </eclipse>
-                    <removeUnusedImports></removeUnusedImports>
-                    <licenseHeader>
-                        <file>${project.basedir}/license-header</file>
-                    </licenseHeader>
-                </java>
-                <pom>
-                    <sortPom>
-                        <!-- see https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md#sortpom -->
-                        <encoding>UTF-8</encoding>
-                        <lineSeparator>\n</lineSeparator>
-                        <expandEmptyElements>true</expandEmptyElements>
-                        <keepBlankLines>false</keepBlankLines>
-                        <nrOfIndentSpace>2</nrOfIndentSpace>
-                        <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
-                        <sortProperties>true</sortProperties>
-                        <sortModules>true</sortModules>
-                        <sortExecutions>true</sortExecutions>
-                    </sortPom>
-                </pom>
-                <formats>
-                    <format>
-                        <includes>
-                            <include>.gitattributes</include>
-                            <include>.gitignore</include>
-                        </includes>
-                        <trimTrailingWhitespace></trimTrailingWhitespace>
-                        <endWithNewline></endWithNewline>
-                        <indent>
-                            <tabs>true</tabs>
-                            <spacesPerTab>4</spacesPerTab>
-                        </indent>
-                    </format>
-                </formats>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                    <phase>compile</phase>
-                </execution>
-            </executions>
-        </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.43.0</version>
+        <configuration>
+          <java>
+            <toggleOffOn></toggleOffOn>
+            <eclipse>
+              <file>${project.basedir}/eclipse-java-formatter.xml</file>
+              <version>4.10.0</version>
+            </eclipse>
+            <removeUnusedImports></removeUnusedImports>
+            <licenseHeader>
+              <file>${project.basedir}/license-header</file>
+            </licenseHeader>
+          </java>
+          <pom>
+            <sortPom>
+              <!-- see https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md#sortpom -->
+              <encoding>UTF-8</encoding>
+              <lineSeparator>\n</lineSeparator>
+              <expandEmptyElements>true</expandEmptyElements>
+              <keepBlankLines>false</keepBlankLines>
+              <nrOfIndentSpace>2</nrOfIndentSpace>
+              <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+              <sortProperties>true</sortProperties>
+              <sortModules>true</sortModules>
+              <sortExecutions>true</sortExecutions>
+            </sortPom>
+          </pom>
+          <formats>
+            <format>
+              <includes>
+                <include>.gitattributes</include>
+                <include>.gitignore</include>
+              </includes>
+              <trimTrailingWhitespace></trimTrailingWhitespace>
+              <endWithNewline></endWithNewline>
+              <indent>
+                <tabs>true</tabs>
+                <spacesPerTab>4</spacesPerTab>
+              </indent>
+            </format>
+          </formats>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>compile</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.15</version>
         <inherited>false</inherited>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
           <licenses>
@@ -323,15 +307,19 @@
             <exclude>rpm/**</exclude>
           </excludes>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>test</phase>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>3.3.0</version>
         <executions>
-          <execution>
-            <id>enforce</id>
-            <phase>none</phase>
-          </execution>
           <execution>
             <id>enforce-maven</id>
             <goals>
@@ -344,6 +332,10 @@
                 </requireMavenVersion>
               </rules>
             </configuration>
+          </execution>
+          <execution>
+            <id>enforce</id>
+            <phase>none</phase>
           </execution>
         </executions>
       </plugin>
@@ -360,14 +352,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.4.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <filters>
             <filter>
@@ -394,6 +378,14 @@
             </transformer>
           </transformers>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -467,18 +459,18 @@
         </configuration>
         <executions>
           <execution>
-            <id>flatten</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>flatten</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>flatten.clean</id>
-            <phase>clean</phase>
             <goals>
               <goal>clean</goal>
             </goals>
+            <phase>clean</phase>
+          </execution>
+          <execution>
+            <id>flatten</id>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+            <phase>process-resources</phase>
           </execution>
         </executions>
       </plugin>
@@ -487,6 +479,13 @@
   <profiles>
     <profile>
       <id>publish-github-packages</id>
+      <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/teragrep/aer_01</url>
+        </repository>
+      </distributionManagement>
       <build>
         <plugins>
           <plugin>
@@ -496,10 +495,10 @@
             <executions>
               <execution>
                 <id>sign-artifacts</id>
-                <phase>verify</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <phase>verify</phase>
                 <configuration>
                   <gpgArguments>
                     <arg>--pinentry-mode</arg>
@@ -511,13 +510,6 @@
           </plugin>
         </plugins>
       </build>
-      <distributionManagement>
-        <repository>
-          <id>github</id>
-          <name>GitHub Packages</name>
-          <url>https://maven.pkg.github.com/teragrep/aer_01</url>
-        </repository>
-      </distributionManagement>
     </profile>
   </profiles>
 </project>

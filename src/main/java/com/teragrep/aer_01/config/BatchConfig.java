@@ -48,6 +48,7 @@ package com.teragrep.aer_01.config;
 import com.teragrep.aer_01.config.source.Sourceable;
 
 public final class BatchConfig {
+
     private final int maxBatchSize;
 
     public BatchConfig(final Sourceable sourceable) {

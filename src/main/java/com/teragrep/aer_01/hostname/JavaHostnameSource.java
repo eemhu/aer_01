@@ -49,6 +49,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public final class JavaHostnameSource implements HostnameSource {
+
     @Override
     public String hostname() throws UnknownHostException {
         return InetAddress.getLocalHost().getHostName();

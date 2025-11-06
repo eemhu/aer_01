@@ -80,6 +80,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public final class EventBatchConsumerTest {
+
     private Server server;
     private EventLoop eventLoop;
     private Thread eventLoopThread;
@@ -124,8 +125,17 @@ public final class EventBatchConsumerTest {
     void testSendEventBatch() {
         MetricRegistry metricRegistry = new MetricRegistry();
         RelpConnectionConfig relpConfig = new RelpConnectionConfig(
-                2500, 1500, 1500, 500, 1601, "localhost", 100_000, true, Duration.ofMillis(150_000L),
-                false, true
+                2500,
+                1500,
+                1500,
+                500,
+                1601,
+                "localhost",
+                100_000,
+                true,
+                Duration.ofMillis(150_000L),
+                false,
+                true
         );
         DefaultOutput output = new DefaultOutput(
                 new UnboundPool<>(
@@ -139,12 +149,35 @@ public final class EventBatchConsumerTest {
         );
         EventBatchConsumer edc = new EventBatchConsumer(
                 new ParsedEventConsumer(
-                output,
-                new HashMap<>(),
-                Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
-                Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
-                metricRegistry
-        ));
+                        output,
+                        new HashMap<>(),
+                        Assertions
+                                .assertDoesNotThrow(
+                                        () -> new WrappedPluginFactoryWithConfig(
+                                                new PluginFactoryInitialization(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory"
+                                                ).pluginFactory(),
+                                                new PluginFactoryConfigImpl(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory",
+                                                        "{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"
+                                                )
+                                        )
+                                ),
+                        Assertions
+                                .assertDoesNotThrow(
+                                        () -> new WrappedPluginFactoryWithConfig(
+                                                new PluginFactoryInitialization(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory"
+                                                ).pluginFactory(),
+                                                new PluginFactoryConfigImpl(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory",
+                                                        "{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"
+                                                )
+                                        )
+                                ),
+                        metricRegistry
+                )
+        );
 
         edc.accept(new FakeEventBatchContextFactoryImpl(10).eventBatchContext());
         Assertions.assertEquals(10, messages.size());
@@ -189,8 +222,17 @@ public final class EventBatchConsumerTest {
     void testMetrics() {
         MetricRegistry metricRegistry = new MetricRegistry();
         RelpConnectionConfig relpConfig = new RelpConnectionConfig(
-                2500, 1500, 1500, 500, 1601, "localhost", 100_000, true, Duration.ofMillis(150_000L),
-                false, true
+                2500,
+                1500,
+                1500,
+                500,
+                1601,
+                "localhost",
+                100_000,
+                true,
+                Duration.ofMillis(150_000L),
+                false,
+                true
         );
         DefaultOutput output = new DefaultOutput(
                 new UnboundPool<>(
@@ -206,17 +248,45 @@ public final class EventBatchConsumerTest {
                 new ParsedEventConsumer(
                         output,
                         new HashMap<>(),
-                        Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
-                        Assertions.assertDoesNotThrow(() -> new WrappedPluginFactoryWithConfig(new PluginFactoryInitialization("com.teragrep.aer_01.plugin.DefaultPluginFactory").pluginFactory(), new PluginFactoryConfigImpl("com.teragrep.aer_01.plugin.DefaultPluginFactory","{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"))),
+                        Assertions
+                                .assertDoesNotThrow(
+                                        () -> new WrappedPluginFactoryWithConfig(
+                                                new PluginFactoryInitialization(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory"
+                                                ).pluginFactory(),
+                                                new PluginFactoryConfigImpl(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory",
+                                                        "{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"
+                                                )
+                                        )
+                                ),
+                        Assertions
+                                .assertDoesNotThrow(
+                                        () -> new WrappedPluginFactoryWithConfig(
+                                                new PluginFactoryInitialization(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory"
+                                                ).pluginFactory(),
+                                                new PluginFactoryConfigImpl(
+                                                        "com.teragrep.aer_01.plugin.DefaultPluginFactory",
+                                                        "{\"realHostname\":\"localhost\",\"syslogHostname\":\"localhost\",\"syslogAppname\":\"aer-01\"}"
+                                                )
+                                        )
+                                ),
                         metricRegistry
                 )
         );
 
         edc.accept(new FakeEventBatchContextFactoryImpl(10).eventBatchContext());
         Assertions.assertEquals(10, messages.size());
-        Assertions.assertEquals(10L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.records").getCount());
-        Assertions.assertEquals(1L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.connects").getCount());
-        Assertions.assertEquals(0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.retriedConnects").getCount());
-        Assertions.assertEquals(0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.resends").getCount());
+        Assertions
+                .assertEquals(10L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.records").getCount());
+        Assertions
+                .assertEquals(1L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.connects").getCount());
+        Assertions
+                .assertEquals(
+                        0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.retriedConnects").getCount()
+                );
+        Assertions
+                .assertEquals(0L, metricRegistry.counter("com.teragrep.aer_01.DefaultOutput.<[defaultOutput]>.resends").getCount());
     }
 }

@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Objects;
 
 public final class ParsedEventListFromEventBatchFactory {
+
     private final EventBatchContext eventBatchContext;
     private static final EventPartitionContext eventPartitionContextStub = new EventPartitionContextStub();
     private static final EventProperties eventPropertiesStub = new EventPropertiesStub();
@@ -134,16 +135,8 @@ public final class ParsedEventListFromEventBatchFactory {
                 offset = eventOffsetStub;
             }
 
-
             final ParsedEvent pe = new ParsedEventFactory(
-                    new UnparsedEventImpl(
-                            payload,
-                            partitionCtx,
-                            props,
-                            systemProps,
-                            enqueuedTime,
-                            offset
-                    )
+                    new UnparsedEventImpl(payload, partitionCtx, props, systemProps, enqueuedTime, offset)
             ).parsedEvent();
 
             parsedEvents.add(pe);

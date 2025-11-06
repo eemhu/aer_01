@@ -48,5 +48,6 @@ package com.teragrep.aer_01.hostname;
 import java.net.UnknownHostException;
 
 public interface HostnameSource {
+
     public abstract String hostname() throws UnknownHostException;
 }

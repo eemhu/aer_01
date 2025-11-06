@@ -50,6 +50,7 @@ import com.teragrep.aer_01.hostname.HostnameSource;
 import java.net.UnknownHostException;
 
 public final class ThrowingFakeHostnameSource implements HostnameSource {
+
     @Override
     public String hostname() throws UnknownHostException {
         throw new UnknownHostException("Fake hostname source throws an exception");

@@ -153,8 +153,6 @@ public final class MappedPluginFactoriesTest {
 
     @Test
     void testEqualsContract() {
-        EqualsVerifier
-                .forClass(MappedPluginFactories.class)
-                .verify();
+        EqualsVerifier.forClass(MappedPluginFactories.class).verify();
     }
 }

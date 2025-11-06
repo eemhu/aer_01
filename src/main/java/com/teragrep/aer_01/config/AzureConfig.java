@@ -48,6 +48,7 @@ package com.teragrep.aer_01.config;
 import com.teragrep.aer_01.config.source.Sourceable;
 
 public final class AzureConfig {
+
     private final String namespaceName;
     private final String eventHubName;
     private final String blobStorageEndpoint;
@@ -57,12 +58,16 @@ public final class AzureConfig {
         this(
                 configSource.source("azure.namespace", "<NAMESPACE NAME>.servicebus.windows.net"),
                 configSource.source("azure.eventhub", "<EVENT HUB NAME>"),
-                configSource.source("azure.blobstorage.endpoint", "https://<STORAGE ACCOUNT NAME>.blob.core.windows.net"),
-                configSource.source("azure.blobstorage.container", "<CONTAINER NAME>")
+                configSource.source("azure.blobstorage.endpoint", "https://<STORAGE ACCOUNT NAME>.blob.core.windows.net"), configSource.source("azure.blobstorage.container", "<CONTAINER NAME>")
         );
     }
 
-    public AzureConfig(final String namespaceName, final String eventHubName, final String blobStorageEndpoint, final String blobStorageContainerName) {
+    public AzureConfig(
+            final String namespaceName,
+            final String eventHubName,
+            final String blobStorageEndpoint,
+            final String blobStorageContainerName
+    ) {
         this.namespaceName = namespaceName;
         this.eventHubName = eventHubName;
         this.blobStorageEndpoint = blobStorageEndpoint;

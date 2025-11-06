@@ -54,10 +54,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class ConfigTest {
+
     @Test
     public void testConfigFromEnv() {
         AzureConfig azureConfig = new AzureConfig(new EnvironmentSource()); // AZURE_NAMESPACE comes from maven
-        Assertions.assertEquals("azure_namespace_from_env", azureConfig.namespaceName(), "Expected to get config from environment variable");
+        Assertions
+                .assertEquals(
+                        "azure_namespace_from_env", azureConfig.namespaceName(),
+                        "Expected to get config from environment variable"
+                );
     }
 
     @Test

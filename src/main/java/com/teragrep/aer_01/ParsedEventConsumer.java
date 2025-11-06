@@ -69,6 +69,7 @@ import java.util.stream.Collectors;
 import static com.codahale.metrics.MetricRegistry.name;
 
 public final class ParsedEventConsumer implements AutoCloseable, Consumer<List<ParsedEvent>> {
+
     private final Output output;
     private final Map<String, WrappedPluginFactoryWithConfig> pluginFactories;
     private final MetricRegistry metricRegistry;

@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FakeEventBatchContextFactoryImpl implements EventBatchContextFactory {
+
     private final int batchSize;
 
     public FakeEventBatchContextFactoryImpl(final int batchSize) {
@@ -65,10 +66,18 @@ public final class FakeEventBatchContextFactoryImpl implements EventBatchContext
     @Override
     public EventBatchContext eventBatchContext() {
         final List<EventData> eventDataList = new ArrayList<>();
-        final PartitionContext partitionContext = new PartitionContext("namespace", "eventHubName",
-                "consumerGroup", "0");
-        final LastEnqueuedEventProperties lastEnqueuedEventProperties = new LastEnqueuedEventProperties(1L, 100L,
-                Instant.ofEpochSecond(0), Instant.ofEpochSecond(0));
+        final PartitionContext partitionContext = new PartitionContext(
+                "namespace",
+                "eventHubName",
+                "consumerGroup",
+                "0"
+        );
+        final LastEnqueuedEventProperties lastEnqueuedEventProperties = new LastEnqueuedEventProperties(
+                1L,
+                100L,
+                Instant.ofEpochSecond(0),
+                Instant.ofEpochSecond(0)
+        );
         final CheckpointStore checkpointStore = new CheckpointStoreFake();
 
         for (int i = 0; i < batchSize; i++) {

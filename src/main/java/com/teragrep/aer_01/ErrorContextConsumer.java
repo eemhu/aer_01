@@ -50,10 +50,13 @@ import com.azure.messaging.eventhubs.models.ErrorContext;
 import java.util.function.Consumer;
 
 final class ErrorContextConsumer implements Consumer<ErrorContext> {
+
     @Override
     public void accept(ErrorContext errorContext) {
-        System.out.printf("Error occurred in partition processor for partition %s, %s.%n",
-                errorContext.getPartitionContext().getPartitionId(),
-                errorContext.getThrowable());
+        System.out
+                .printf(
+                        "Error occurred in partition processor for partition %s, %s.%n",
+                        errorContext.getPartitionContext().getPartitionId(), errorContext.getThrowable()
+                );
     }
 }

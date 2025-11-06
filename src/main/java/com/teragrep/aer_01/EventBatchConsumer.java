@@ -54,9 +54,7 @@ public final class EventBatchConsumer implements AutoCloseable, Consumer<EventBa
 
     private final ParsedEventConsumer parsedEventConsumer;
 
-    EventBatchConsumer(
-        final ParsedEventConsumer parsedEventConsumer
-    ) {
+    EventBatchConsumer(final ParsedEventConsumer parsedEventConsumer) {
         this.parsedEventConsumer = parsedEventConsumer;
     }
 

@@ -134,8 +134,9 @@ public final class ManagedRelpConnectionWithMetrics implements IManagedRelpConne
             catch (final IOException | TimeoutException e) {
                 LOGGER
                         .warn(
-                                "Failed to connect to relp server <[{}]>:<[{}]>: <{}>", relpConnection.relpConfig().relpTarget,
-                                        + relpConnection.relpConfig().relpPort, e.getMessage()
+                                "Failed to connect to relp server <[{}]>:<[{}]>: <{}>",
+                                relpConnection.relpConfig().relpTarget, +relpConnection.relpConfig().relpPort,
+                                e.getMessage()
                         );
 
                 try {
@@ -158,6 +159,7 @@ public final class ManagedRelpConnectionWithMetrics implements IManagedRelpConne
             relpConnection.tearDown();
         }
     }
+
     @Override
     public void ensureSent(final byte[] bytes) {
         final RelpBatch batch = new RelpBatch();

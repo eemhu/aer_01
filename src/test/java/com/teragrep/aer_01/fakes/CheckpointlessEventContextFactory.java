@@ -43,7 +43,6 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-
 package com.teragrep.aer_01.fakes;
 
 import com.azure.messaging.eventhubs.CheckpointStore;
@@ -65,12 +64,20 @@ final public class CheckpointlessEventContextFactory implements EventContextFact
             partitionId++;
         }
 
-        final PartitionContext partitionContext = new PartitionContext("namespace", "eventHubName",
-                "consumerGroup", partitionId.toString());
+        final PartitionContext partitionContext = new PartitionContext(
+                "namespace",
+                "eventHubName",
+                "consumerGroup",
+                partitionId.toString()
+        );
         final EventData eventData = new EventDataFake();
         final CheckpointStore checkpointStore = new CheckpointStoreFake();
-        final LastEnqueuedEventProperties lastEnqueuedEventProperties = new LastEnqueuedEventProperties(1L, 100L,
-                Instant.ofEpochSecond(0), Instant.ofEpochSecond(0));
+        final LastEnqueuedEventProperties lastEnqueuedEventProperties = new LastEnqueuedEventProperties(
+                1L,
+                100L,
+                Instant.ofEpochSecond(0),
+                Instant.ofEpochSecond(0)
+        );
 
         created++;
         return new EventContext(partitionContext, eventData, checkpointStore, lastEnqueuedEventProperties);

@@ -129,7 +129,10 @@ public final class ManagedRelpConnectionWithMetricsFactory implements Supplier<I
 
         final IManagedRelpConnection connectionWithPossibleRebindEnabled;
         if (relpConfig.rebindEnabled) {
-            connectionWithPossibleRebindEnabled = new RebindableRelpConnection(managedRelpConnection, relpConfig.rebindRequestAmount);
+            connectionWithPossibleRebindEnabled = new RebindableRelpConnection(
+                    managedRelpConnection,
+                    relpConfig.rebindRequestAmount
+            );
         }
         else {
             connectionWithPossibleRebindEnabled = managedRelpConnection;
@@ -137,7 +140,10 @@ public final class ManagedRelpConnectionWithMetricsFactory implements Supplier<I
 
         final IManagedRelpConnection connectionWithPossibleMaxIdleEnabled;
         if (relpConfig.maxIdleEnabled) {
-            connectionWithPossibleMaxIdleEnabled = new RenewableRelpConnection(connectionWithPossibleRebindEnabled, relpConfig.maxIdle);
+            connectionWithPossibleMaxIdleEnabled = new RenewableRelpConnection(
+                    connectionWithPossibleRebindEnabled,
+                    relpConfig.maxIdle
+            );
         }
         else {
             connectionWithPossibleMaxIdleEnabled = connectionWithPossibleRebindEnabled;

@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 public final class EventPartitionContextFromPojoTest {
+
     @Test
     void testEqualsContract() {
         EqualsVerifier.forClass(EventPartitionContextFromPojo.class).verify();
@@ -67,9 +68,7 @@ public final class EventPartitionContextFromPojoTest {
                 "test-consumer-group",
                 "test-partition-id"
         );
-        final EventPartitionContext eventPartitionContext = new EventPartitionContextFromPojo(
-                partitionContext
-        );
+        final EventPartitionContext eventPartitionContext = new EventPartitionContextFromPojo(partitionContext);
         final Map<String, Object> ctxMap = eventPartitionContext.asMap();
 
         Assertions.assertEquals("test-namespace", ctxMap.get("FullyQualifiedNamespace"));

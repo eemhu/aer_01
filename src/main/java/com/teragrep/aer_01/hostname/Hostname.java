@@ -84,7 +84,8 @@ public final class Hostname {
             return false;
         }
         final Hostname hostname = (Hostname) o;
-        return Objects.equals(hostnameSource, hostname.hostnameSource) && Objects.equals(defaultHostname, hostname.defaultHostname);
+        return Objects.equals(hostnameSource, hostname.hostnameSource)
+                && Objects.equals(defaultHostname, hostname.defaultHostname);
     }
 
     @Override

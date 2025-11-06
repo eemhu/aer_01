@@ -71,6 +71,7 @@ public final class RelpConnectionConfig {
 
     /**
      * Initialize RelpConnectionConfig using a {@link Sourceable} as the source.
+     * 
      * @param configSource {@link Sourceable}
      */
     public RelpConnectionConfig(final Sourceable configSource) {
@@ -91,17 +92,18 @@ public final class RelpConnectionConfig {
 
     /**
      * Initialize RelpConnectionConfig directly with the configuration values.
-     * @param connectTimeout relp.connection.timeout
-     * @param readTimeout relp.transaction.read.timeout
-     * @param writeTimeout relp.transaction.write.timeout
-     * @param reconnectInt relp.connection.retry.interval
-     * @param port relp.connection.port
-     * @param addr relp.connection.address
+     * 
+     * @param connectTimeout      relp.connection.timeout
+     * @param readTimeout         relp.transaction.read.timeout
+     * @param writeTimeout        relp.transaction.write.timeout
+     * @param reconnectInt        relp.connection.retry.interval
+     * @param port                relp.connection.port
+     * @param addr                relp.connection.address
      * @param rebindRequestAmount relp.rebind.request.amount
-     * @param rebindEnabled relp.rebind.enabled
-     * @param maxIdle relp.max.idle.duration
-     * @param maxIdleEnabled relp.max.idle.enabled
-     * @param keepAlive relp.connection.keepalive
+     * @param rebindEnabled       relp.rebind.enabled
+     * @param maxIdle             relp.max.idle.duration
+     * @param maxIdleEnabled      relp.max.idle.enabled
+     * @param keepAlive           relp.connection.keepalive
      */
     public RelpConnectionConfig(
             final int connectTimeout,

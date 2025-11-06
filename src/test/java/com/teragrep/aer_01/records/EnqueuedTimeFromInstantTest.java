@@ -55,11 +55,12 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public final class EnqueuedTimeFromInstantTest {
+
     @Test
     void testEnqueuedTimeFromInstant() {
         final Instant fromInstant = Instant.ofEpochMilli(1000);
         final EnqueuedTime et = new EnqueuedTimeFromInstant(fromInstant);
-        Assertions.assertEquals(ZonedDateTime.of(1970,1,1,0,0,1, 0, ZoneId.of("UTC")), et.zonedDateTime());
+        Assertions.assertEquals(ZonedDateTime.of(1970, 1, 1, 0, 0, 1, 0, ZoneId.of("UTC")), et.zonedDateTime());
     }
 
     @Test
