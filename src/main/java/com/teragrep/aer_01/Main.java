@@ -220,7 +220,7 @@ public final class Main {
             Slf4jReporter slf4jReporter,
             MetricRegistry metricRegistry,
             Server jettyServer
-    ) {
+    ) throws Exception {
         jmxReporter.start();
         slf4jReporter.start(1, TimeUnit.MINUTES);
 
@@ -235,14 +235,8 @@ public final class Main {
         final ServletHolder servletHolder = new ServletHolder(metricsServlet);
         context.addServlet(servletHolder, "/metrics");
 
-        // Start the webserver.
-        try {
-            jettyServer.start();
-        }
-        catch (final Exception e) {
-            LOGGER.error("Starting Jetty server failed", e);
-            throw new RuntimeException("Starting Jetty server failed", e);
-        }
+        jettyServer.start();
+
     }
 
     private static Sourceable getConfigSource() {
