@@ -216,7 +216,7 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>${artifactId}</finalName>
+    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
@@ -305,6 +305,10 @@
             <exclude>Dockerfile</exclude>
             <!-- rpm -->
             <exclude>rpm/**</exclude>
+            <!-- formatter -->
+            <exclude>eclipse-java-formatter.xml</exclude>
+            <!-- pom -->
+            <exclude>pom.xml</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -317,25 +321,44 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
-            <id>enforce-maven</id>
+            <id>enforce-settings</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
+                <bannedDependencies>
+                  <excludes>
+                    <!-- We generally do not want to use junit4, only junit5 -->
+                    <exclude>junit:junit</exclude>
+                  </excludes>
+                </bannedDependencies>
                 <requireMavenVersion>
                   <version>3.2.5</version>
                 </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[11,12)</version>
+                </requireJavaVersion>
+                <banDynamicVersions>
+                  <ignores>
+                    <!-- Allow only local development builds by default -->
+                    <ignore>com.teragrep:*:0.0.1-SNAPSHOT</ignore>
+                  </ignores>
+                </banDynamicVersions>
+                <requirePluginVersions>
+                  <message>All plugins are required to contain specific version.</message>
+                  <unCheckedPluginList>org.apache.maven.plugins:maven-site-plugin,org.apache.maven.plugins:maven-resources-plugin,org.apache.maven.plugins:maven-clean-plugin,org.apache.maven.plugins:maven-install-plugin,org.apache.maven.plugins:maven-deploy-plugin,org.apache.maven.plugins:maven-compiler-plugin,org.apache.maven.plugins:maven-jar-plugin</unCheckedPluginList>
+                </requirePluginVersions>
+                <requireNoRepositories>
+                  <message>Do not use any external repositories.</message>
+                </requireNoRepositories>
               </rules>
             </configuration>
-          </execution>
-          <execution>
-            <id>enforce</id>
-            <phase>none</phase>
           </execution>
         </executions>
       </plugin>
