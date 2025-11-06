@@ -588,6 +588,28 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <!-- Version 4.9.x.x series requires java 11+ -->
+        <version>4.9.4.1</version>
+        <configuration>
+          <!-- Default configuration -->
+          <xmlOutput>true</xmlOutput>
+          <effort>Max</effort>
+          <failThreshold>High</failThreshold>
+          <failOnError>true</failOnError>
+          <includeTests>true</includeTests>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>test</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
