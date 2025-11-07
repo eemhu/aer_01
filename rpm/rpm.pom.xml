@@ -97,7 +97,7 @@
               <recurseDirectories>true</recurseDirectories>
               <sources>
                 <source>
-                  <location>${project.basedir}/../target/aer_01.jar</location>
+                  <location>${project.basedir}/../target/aer_01-jar-with-dependencies.jar</location>
                   <destination>aer_01.jar</destination>
                 </source>
               </sources>
